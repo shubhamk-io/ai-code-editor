@@ -1,5 +1,6 @@
 import { app } from "../config/firebase.js";
 import { getAuth } from "firebase-admin/auth";
+import User from "../models/user.model.js";
 
 export const login = async (req, res) => {
   try {
@@ -10,12 +11,28 @@ export const login = async (req, res) => {
     }
 
     const decoded = await getAuth(app).verifyIdToken(token);
+    console.log(decoded)
 
-    const { uid, email, name, picture } = decoded;
+  const user = await User.findOne({
+    firebaseUid : decoded.uid
+  })
 
-    // TODO: DB mein user find/create karo (uid ya email se)
+  // TODO: DB mein user find/create karo (uid ya email se)
+  
 
-    return res.status(200).json({ user: { uid, email, name, picture } });
+if(!user){
+//create user
+const newUser = await User.create({
+  firebaseUid:decoded.uid,
+  name : decoded.name,
+  email : decoded.email,
+  avatar : decoded.picture
+})
+
+return newUser;
+
+}
+    return res.json({decoded})
   } catch (error) {
     console.error("Login error:", error);
     return res.status(401).json({ message: "Invalid or expired token" });
