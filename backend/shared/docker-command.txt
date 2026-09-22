@@ -1,0 +1,2 @@
+// docker run in backend 
+// command: docker compose -d
