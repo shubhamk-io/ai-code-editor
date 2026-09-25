@@ -2,7 +2,8 @@ import { signInWithPopup } from 'firebase/auth'
 import React from 'react'
 import { auth, googleProvider } from './firebase'
 import { login } from './features/login'
-
+import { BrowserRouter, Route, Routes } from "react-router-dom"
+import Dashboard from './pages/Dashboard'
 
 const App = () => {
 
@@ -15,9 +16,11 @@ const App = () => {
     const data = await login(token)
   }
   return (
-    <div
-      onClick={handleLogin}
-      className='bg-yellow-600 cursor-pointer'>Login page</div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/dashboard" element={<Dashboard/>} />
+      </Routes>
+    </BrowserRouter>
   )
 }
 
