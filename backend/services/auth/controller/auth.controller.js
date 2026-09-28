@@ -41,7 +41,7 @@ const sessionId = crypto.randomUUID() // randoumUUI using for generate uniqe id
 
 await redis.set(`session-${sessionId}`,JSON.stringify( {  // set userData in redis
   name:user.name,
-  userId:user._id,
+  _id:user._id,
   email:user.email,
   avatar:user.avatar
 }), "EX",7*24*60*60) // SETTING FOR EXPIRE SESSION ID

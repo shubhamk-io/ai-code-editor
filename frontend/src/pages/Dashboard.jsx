@@ -6,25 +6,36 @@ import {
 import { FiShield, FiCheck, } from "react-icons/fi";
 import { auth, googleProvider } from "../firebase";
 import { login } from "../features/login";
+import { useDispatch } from 'react-redux'
+import { setUserData } from "../redux/userSlice";
 
 
 const Dashboard = () => {
 
   const [loading, setLoading] = useState(false)
+  const dispatch = useDispatch()  // set Data in redux user slice
 
   // Firebase Google login here
   const handleGoogleLogin = async () => {
-    setLoading(true);
-    const userData = await signInWithPopup(auth, googleProvider)
-    console.log(userData)
+    try {
+      setLoading(true);
+      const userData = await signInWithPopup(auth, googleProvider)
+      console.log(userData)
 
 
-    // Get Token from user data
-    const token = await userData.user.getIdToken();
-    setLoading(false)
-    const data = await login(token)
+      // Get Token from user data
+      const token = await userData.user.getIdToken();
+      const data = await login(token)
 
+      dispatch(setUserData(data)) // set data in slice
 
+      console.log("Dispatch user Data", data)
+
+    } catch (error) {
+      console.error("Google Login Error:", error);
+    } finally {
+      setLoading(false)
+    }
   };
 
   return (
@@ -105,7 +116,7 @@ const Dashboard = () => {
             <FcGoogle size={22} />
 
             <span>
-              {loading ?" Sing in.... ":  "Continue with Google"}
+              {loading ? " Sing in.... " : "Continue with Google"}
             </span>
 
           </button>
