@@ -1,5 +1,7 @@
 {
+  "type": "module",
   "dependencies": {
+    "dotenv": "^18.0.4",
     "ioredis": "^6.0.0"
   }
 }

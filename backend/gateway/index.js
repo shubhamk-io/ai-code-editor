@@ -1,5 +1,5 @@
-import express from "express";
 import dotenv from "dotenv";
+import express from "express";
 import cookieParser from "cookie-parser";
 
 dotenv.config();
@@ -24,7 +24,7 @@ app.use(morgan("dev"));
 // ---------------- Route-------------
 
 app.use("/auth",proxy(process.env.AUTH_SERVIECE))
-app.get("/me", protectMiddleware,getCurrentUser)
+app.get("/api/me", protectMiddleware,getCurrentUser)
 
 app.get("/", (req, res) => {
     res.json({ message: "Hellow from gateway" });

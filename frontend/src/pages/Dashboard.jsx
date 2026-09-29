@@ -6,14 +6,17 @@ import {
 import { FiShield, FiCheck, } from "react-icons/fi";
 import { auth, googleProvider } from "../firebase";
 import { login } from "../features/login";
-import { useDispatch } from 'react-redux'
-import { setUserData } from "../redux/userSlice";
+import { useDispatch, useSelector } from 'react-redux'
+import { setUserData } from "../redux/userSlice.js";
 
 
 const Dashboard = () => {
 
   const [loading, setLoading] = useState(false)
   const dispatch = useDispatch()  // set Data in redux user slice
+
+  // get UserData from redux syntax
+  const {userData} = useSelector(state => state.user)
 
   // Firebase Google login here
   const handleGoogleLogin = async () => {
@@ -38,7 +41,11 @@ const Dashboard = () => {
     }
   };
 
-  return (
+
+  // if not userData to showing sing In page -------------------------------->
+  if(!userData){
+
+    return (
     <div className="min-h-screen bg-[#08090D] text-white flex items-center justify-center px-6 relative overflow-hidden">
 
       {/* Background Glow */}
@@ -184,6 +191,19 @@ const Dashboard = () => {
 
     </div>
   );
+
+  }
+
+// If userData to showing this this proper dahborard ----------------------------------->
+return (
+
+  <div>
+
+  </div>
+
+)
+
+  
 };
 
 

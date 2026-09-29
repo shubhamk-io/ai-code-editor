@@ -52,7 +52,7 @@ await redis.set(`session-${sessionId}`,JSON.stringify( {  // set userData in red
 res.cookie("session", sessionId,{
 httpOnly:true,
 secure:false,
-sameSite:"strict",   // <-- "samesite" lowercase tha, express/cookie package sirf "sameSite" (camelCase) ko recognize karta hai
+sameSite:"lax",   // <-- "samesite" lowercase tha, express/cookie package sirf "sameSite" (camelCase) ko recognize karta hai
 maxAge:7*24*60*60*1000
 })
 
