@@ -1,9 +1,7 @@
-import dotenv from "dotenv";
+import "dotenv/config";
 import express from "express";
 import cookieParser from "cookie-parser";
-
-dotenv.config();
-import cors from "cors"
+import cors from "cors";
 import morgan from "morgan";
 import proxy from "express-http-proxy";
 import { protectMiddleware } from "./middleware/protectMiddleware.js";
@@ -12,26 +10,25 @@ import { getCurrentUser } from "./controller/user.controller.js";
 const port = process.env.PORT || 8000;
 
 const app = express();
-app.use(cors({
-    origin:process.env.FRONTEND_URL,
-    credentials:true
-}));
 
-// ---------Cookie Parser--------//
+app.use(cors({
+  origin: process.env.FRONTEND_URL,
+  credentials: true,
+}));
 app.use(cookieParser());
 app.use(morgan("dev"));
 
-// ---------------- Route-------------
-
+// send /api/auth/* to auth service (keep full path so /api/auth/login works)
 app.use("/api/auth", proxy(process.env.AUTH_SERVIECE, {
-    proxyReqPathResolver: (req) => "/api/auth" + req.url
-}))
-app.get("/api/me", protectMiddleware,getCurrentUser)
+  proxyReqPathResolver: (req) => req.originalUrl,
+}));
+
+app.get("/api/me", protectMiddleware, getCurrentUser);
 
 app.get("/", (req, res) => {
-    res.json({ message: "Hellow from gateway" });
+  res.json({ message: "Hello from gateway" });
 });
 
 app.listen(port, () => {
-    console.log(`gateway started at ${port}`);
+  console.log(`gateway started at ${port}`);
 });

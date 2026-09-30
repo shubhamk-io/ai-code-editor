@@ -1,17 +1,16 @@
-// config redis
-import "dotenv/config"   // first load env this config redis 
 import Redis from "ioredis"
 
-const redis = new Redis(process.env.REDIS_URL);
-
-// if redis connect console(redis connected)
-redis.on("connect", () => {
-    console.log("redis connected")
+const redis = new Redis({
+  host: "127.0.0.1",
+  port: 6379,
 })
 
-// error chhupna nahi chahiye, ye add karo
+redis.on("connect", () => {
+  console.log("redis connected")
+})
+
 redis.on("error", (err) => {
-    console.error("redis error:", err.message)
+  console.error("redis error:", err.message)
 })
 
 export default redis

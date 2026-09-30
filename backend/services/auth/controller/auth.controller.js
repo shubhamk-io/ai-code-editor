@@ -52,8 +52,9 @@ export const login = async (req, res) => {
     res.cookie("session", sessionId, {
       httpOnly: true,
       secure: false,
-      sameSite: "lax",   // <-- "samesite" lowercase tha, express/cookie package sirf "sameSite" (camelCase) ko recognize karta hai
-      maxAge: 7 * 24 * 60 * 60 * 1000
+      sameSite: "lax",
+      path: "/",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
     })
 
     // return response and user.
@@ -75,7 +76,7 @@ export const logOut = async (req, res) => { // req uising to get data
 
     // using key to delete session id
     await redis.del(`session-${sessionId}`)
-    res.clearCookie("session") // delete cookie in cookies 
+    res.clearCookie("session", { path: "/" }) 
 
     return res.status(200).json({ message: "Logout successfully" })
 

@@ -29,8 +29,9 @@ const Dashboard = () => {
       // Get Token from user data
       const token = await userData.user.getIdToken();
       const data = await login(token)
-
-      dispatch(setUserData(data)) // set data in slice
+      if (data) {
+        dispatch(setUserData(data))
+      }
 
       console.log("Dispatch user Data", data)
 
