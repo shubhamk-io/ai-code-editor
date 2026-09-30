@@ -1,5 +1,5 @@
 import React, { use, useEffect } from 'react'
-import { BrowserRouter, Route, Routes } from "react-router-dom"
+import { BrowserRouter, Route, Routes,Navigate } from "react-router-dom"
 import Dashboard from './pages/Dashboard'
 import { me } from './features/me'
 import { useDispatch } from 'react-redux'
@@ -33,10 +33,11 @@ const App = () => {
 
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/dashboard" element={<Dashboard/>} />
-      </Routes>
-    </BrowserRouter>
+    <Routes>
+      <Route path="/" element={<Navigate to="/dashboard" />} />
+      <Route path="/dashboard" element={<Dashboard/>} />
+    </Routes>
+  </BrowserRouter>
   )
 }
 

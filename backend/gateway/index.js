@@ -23,7 +23,9 @@ app.use(morgan("dev"));
 
 // ---------------- Route-------------
 
-app.use("/auth",proxy(process.env.AUTH_SERVIECE))
+app.use("/api/auth", proxy(process.env.AUTH_SERVIECE, {
+    proxyReqPathResolver: (req) => "/api/auth" + req.url
+}))
 app.get("/api/me", protectMiddleware,getCurrentUser)
 
 app.get("/", (req, res) => {
