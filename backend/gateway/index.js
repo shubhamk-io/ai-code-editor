@@ -23,6 +23,12 @@ app.use("/api/auth", proxy(process.env.AUTH_SERVIECE, {
   proxyReqPathResolver: (req) => req.originalUrl,
 }));
 
+
+// first check user hai ya nhi using protectMiddleware the next go to project
+app.use("/api/project",protectMiddleware, proxy(process.env.PROJECT_SERVIECE, {
+  proxyReqPathResolver: (req) => req.originalUrl,
+}));
+
 app.get("/api/me", protectMiddleware, getCurrentUser);
 
 app.get("/", (req, res) => {
