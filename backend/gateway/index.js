@@ -23,9 +23,15 @@ app.use("/api/auth", proxy(process.env.AUTH_SERVIECE, {
   proxyReqPathResolver: (req) => req.originalUrl,
 }));
 
-
 // first check user hai ya nhi using protectMiddleware the next go to project
 app.use("/api/project",protectMiddleware, proxy(process.env.PROJECT_SERVIECE, {
+  proxyReqBodyDecorator:(proxyReqOpts,req) => { // this is using to send {header} to project
+    if(req.user){
+      proxyReqOpts.headers["x-user-id"] = req.user?._id
+    }
+    return proxyReqOpts
+  }
+} , {
   proxyReqPathResolver: (req) => req.originalUrl,
 }));
 
