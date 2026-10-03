@@ -4,7 +4,7 @@ const projectSchema = new mongoose.Schema({
 owner : {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
-    require: true
+    required: true
 },
 
 name: {
@@ -14,7 +14,7 @@ name: {
 description:{
     type:String
 },
-strared:{
+starred:{
     type:Boolean,
     default:false,
 },
@@ -28,5 +28,5 @@ lastOpendAt: {
     timestamps:true
 })
 
-const project = mongoose.model("Project",projectSchema)
-export default project
+const Project = mongoose.model("Project",projectSchema)
+export default Project
