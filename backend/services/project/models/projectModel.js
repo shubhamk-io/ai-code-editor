@@ -29,4 +29,4 @@ lastOpendAt: {
 })
 
 const project = mongoose.model("Project",projectSchema)
-export default Project
+export default project

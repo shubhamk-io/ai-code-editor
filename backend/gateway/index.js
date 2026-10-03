@@ -6,6 +6,7 @@ import morgan from "morgan";
 import proxy from "express-http-proxy";
 import { protectMiddleware } from "./middleware/protectMiddleware.js";
 import { getCurrentUser } from "./controller/user.controller.js";
+import { proxyWithHeaders } from "./utils/proxyWithHeaders.js";
 
 const port = process.env.PORT || 8000;
 
@@ -24,16 +25,7 @@ app.use("/api/auth", proxy(process.env.AUTH_SERVIECE, {
 }));
 
 // first check user hai ya nhi using protectMiddleware the next go to project
-app.use("/api/project",protectMiddleware, proxy(process.env.PROJECT_SERVIECE, {
-  proxyReqBodyDecorator:(proxyReqOpts,req) => { // this is using to send {header} to project
-    if(req.user){
-      proxyReqOpts.headers["x-user-id"] = req.user?._id
-    }
-    return proxyReqOpts
-  }
-} , {
-  proxyReqPathResolver: (req) => req.originalUrl,
-}));
+app.use("/api/project",protectMiddleware, proxyWithHeaders(process.env.PROJECT_SERVIECE)); // USING PROXYHEADER TO SEND DATA HEADER
 
 app.get("/api/me", protectMiddleware, getCurrentUser);
 
