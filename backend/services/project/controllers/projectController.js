@@ -1,3 +1,5 @@
+import { json } from "express";
+import redis from "../../../shared/redis.js";
 import Project from "../models/projectModel.js";;
 
 
@@ -39,10 +41,22 @@ export const allProjects = async (req, res) => {
             return res.status(401).json({ message: "User is required" });
         }
 
+        // using redis bcause never call get allProject api when user refresh 
+        // --- set data in redis to get easily for refresh
+        // 1.create key using userId ------
+        const key = `project-${userId}`
+        let result = await redis.get(key)
+        // condition agr result/ project hai to return ker do projects 
+        if (result) {
+            return res.status(200).json(JSON.parse(result))
+        }
+
+
         // 2. access all project jo user na create kiye hai
         const projects = await Project.find({
             owner: userId
         }).sort({ updatedAt: -1 }) // .sort using for show newly updated project on top
+        await redis.set(key, JSON.stringify(projects))
 
         return res.status(200).json(projects)
 
@@ -105,16 +119,10 @@ export const getSatrredProject = async (req, res) => {
 // Toggle starrated project
 export const toggleStarraedProject = async () => {
     try {
-        // 1. Get user Id by using header 
-        const userId = req.header["x-user-id"];
-        if (!userId) {
-            return res.status(401).json({ message: "UserId is required" })
-        }
-
-        // 2. Get id by req.params
+        // 1. Get id by req.params
         const { id } = req.params
 
-        // 3. find project by id and then toggle like [true / false]
+        // 32. find project by id and then toggle like [true / false]
         const project = await Project.findById(id)
         if (!project) {
             return res.status(404).json({ message: "Project isn not found" })
@@ -127,5 +135,25 @@ export const toggleStarraedProject = async () => {
 
     } catch (error) {
         return res.status(500).json({ message: `Toggle starred prject error ${error}` })
+    }
+}
+
+
+// Delete project function ///
+export const deleteProject = async (req, res) => {
+    try {
+        // 1. Get project id using req.params //
+        const { id } = req.params
+
+        // 2.find project using this id and delte 
+        const project = await Project.findOneAndDelete(id);
+        if (!project) {
+            return res.status(404).json({ message: "project not found" })
+        }
+
+        return res.status(200).json(project)
+
+    } catch (error) {
+        return res.status(500).json({ message: `Project Delete Error: ${error}` })
     }
 }

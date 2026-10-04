@@ -2,6 +2,7 @@ import "dotenv/config"
 import express from "express"
 import { connectDb } from "./config/db.js"
 import cookieParser from "cookie-parser"
+import router from "./Routes/project.route.js"
 
 
 
@@ -13,6 +14,7 @@ app.use(express.json());
 app.use(cookieParser())
 
 
+app.use("/", router)
 app.use("/api/project", (req, res) => {
     res.json(
         {
