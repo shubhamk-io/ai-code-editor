@@ -15,7 +15,7 @@ export const protectMiddleware = async (req,res,next) => {
     }
 
     // redis mai humne json to string mai convert ker ker set kiya tha ab jb dubara hume ese protect middleware mai use kerna hai to usko json mai get ya conver kerna hoga
-    // string to json conver suing json.parse method
+    // string to json conver uing json.parse method
     const data = JSON.parse(result);
 
     // create key to set user  and easily to access in user in controller

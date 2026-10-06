@@ -1,4 +1,3 @@
-import { json } from "express";
 import redis from "../../../shared/redis.js";
 import Project from "../models/projectModel.js";;
 
@@ -22,6 +21,12 @@ export const createProject = async (req, res) => {
             name,
             description
         })
+
+        // if project is create now delete old project in redis or fer re fetch hoga
+        const key = `project-${userId}`
+
+        // Delete key in redis.
+        await redis.del(key)
 
         return res.status(201).json(newProject)
 
@@ -74,7 +79,7 @@ export const singleProject = async (req, res) => {
 
         // 2. get project 
         const project = await Project.findOne({
-            _id: req.params.projectId, // if you creae project mongodb assing projecID // you get project id using {req.params.projectId}
+            _id: req.params.projectId, // if you create project mongodb assing projecID // you get project id using {req.params.projectId}
             owner: userId
         })
 
