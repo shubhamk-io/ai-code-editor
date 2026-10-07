@@ -103,8 +103,15 @@ export const getSatrredProject = async (req, res) => {
     try {
         // 1. get user id by header
         const userId = req.header["x-user-id"];
-        if (userId) {
+        if (!userId) {
             return res.status(401).json({ message: "User id is required " })
+        }
+
+        const key = `project-${userId}`
+        let result = await redis.get(key)
+
+        if(result){
+            return res.status(200).json(JSON.parse(result))
         }
 
         // 2. find project 
@@ -112,6 +119,9 @@ export const getSatrredProject = async (req, res) => {
             owner: userId,
             starred: true
         }).sort({ updatedAt: -1 })  // show new updated project on top
+
+        // set starred projects in redis 
+        await redis.set(key,JSON.stringify(stProject))
 
         return res.status(200).json(stProject)
 
@@ -132,9 +142,16 @@ export const toggleStarraedProject = async () => {
         if (!project) {
             return res.status(404).json({ message: "Project isn not found" })
         }
+
+        // Creating redis key using Id
+        const key = `starred-project-${userId}`
+
         // if project is true to false  // false to true ker do 
         project.starred = !project.starred
         project.save()  // project save.
+
+        // Delete redis key
+        await res.del(key)
 
         return res.json(200).json(project)
 
@@ -155,6 +172,11 @@ export const deleteProject = async (req, res) => {
         if (!project) {
             return res.status(404).json({ message: "project not found" })
         }
+
+        // Update and delete in redis
+        const key =`project-${userId}`
+        // Delete key in redis
+        await redis.del(key)
 
         return res.status(200).json(project)
 
