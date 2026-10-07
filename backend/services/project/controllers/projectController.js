@@ -77,9 +77,11 @@ export const singleProject = async (req, res) => {
         // 1. Get user Id by header 
         const userId = req.header["x-user-id"];
 
+        const projectId = req.params.id; // you get project id using {req.params.projectId}
+
         // 2. get project 
         const project = await Project.findOne({
-            _id: req.params.projectId, // if you create project mongodb assing projecID // you get project id using {req.params.projectId}
+            _id:projectId, // if you create project mongodb assing projecID // you get project id using {req.params.projectId}
             owner: userId
         })
 
