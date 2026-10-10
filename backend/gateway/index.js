@@ -22,10 +22,14 @@ app.use(morgan("dev"));
 // send /api/auth/* to auth service (keep full path so /api/auth/login works)
 app.use("/api/auth", proxy(process.env.AUTH_SERVIECE, {
   proxyReqPathResolver: (req) => req.originalUrl,
+  proxyErrorHandler: (err, res, next) => {
+    console.error("Auth service error:", err.message);
+    res.status(503).json({ message: "Auth service unavailable" });
+  },
 }));
 
 // first check user hai ya nhi using protectMiddleware the next go to project
-app.use("/api/project",protectMiddleware, proxyWithHeaders(process.env.PROJECT_SERVIECE)); // USING PROXYHEADER TO SEND DATA HEADER
+app.use("/api/project", protectMiddleware, proxyWithHeaders(process.env.PROJECT_SERVIECE)); // USING PROXYHEADER TO SEND DATA HEADER
 
 app.get("/api/me", protectMiddleware, getCurrentUser);
 
