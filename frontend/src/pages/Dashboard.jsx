@@ -12,6 +12,7 @@ import { useTheme } from "../context/ThemeContext";
 
 const Dashboard = () => {
   const [loading, setLoading] = useState(false);
+  const [activeSession, setActiveSession] = useState("project")
   const dispatch = useDispatch();
   const { userData } = useSelector((state) => state.user);
   const { isDark, toggleTheme } = useTheme();
@@ -224,7 +225,7 @@ const Dashboard = () => {
     >
       <NavBar />
       <div className="flex flex-1 overflow-hidden">
-        <Sidebar />
+        <Sidebar  activeSession={activeSession} setActiveSession={setActiveSession}/>
 
      
         {/* Main Content Area */}

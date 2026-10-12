@@ -83,20 +83,20 @@ const UpgradePlanCard = ({ isOpen, onUpgrade }) => {
 
 // ─── Main Sidebar Component ───────────────────────────────────────────────────
 const Sidebar = ({
-  activeTab = "projects",
-  onTabChange,
+  activeSession = "project",
+  setActiveSession,
   onUpgradePlan,
 }) => {
-  const [currentTab, setCurrentTab] = useState(activeTab);
   const [isOpen, setIsOpen] = useState(true);
 
-  const handleSelectTab = (tabId) => {
-    setCurrentTab(tabId);
-    if (onTabChange) onTabChange(tabId);
+  const handleSelectTab = (sessionId) => {
+    if (setActiveSession) {
+      setActiveSession(sessionId);
+    }
   };
 
   const navItems = [
-    { id: "projects", label: "Projects", icon: FiFolder },
+    { id: "project", label: "Projects", icon: FiFolder },
     { id: "starred", label: "Starred", icon: FiStar },
   ];
 
@@ -149,7 +149,10 @@ const Sidebar = ({
       {/* ── Navigation Menu Items (Projects, Starred) ───────────────── */}
       <nav className="flex-1 p-2 space-y-1 overflow-y-auto">
         {navItems.map(({ id, label, icon: Icon }) => {
-          const isActive = currentTab === id;
+          const isActive =
+            activeSession === id ||
+            (id === "project" && activeSession === "projects") ||
+            (id === "projects" && activeSession === "project");
 
           return (
             <button
@@ -227,11 +230,11 @@ const Sidebar = ({
           className={`w-full flex items-center rounded-md text-sm font-medium transition-colors duration-150 cursor-pointer ${isOpen ? "px-3 py-2 gap-3" : "justify-center py-2 px-0"
             }`}
           style={{
-            backgroundColor: currentTab === "settings" ? "var(--active-bg)" : "transparent",
-            color: currentTab === "settings" ? "var(--primary-text)" : "var(--secondary-text)",
+            backgroundColor: activeSession === "settings" ? "var(--active-bg)" : "transparent",
+            color: activeSession === "settings" ? "var(--primary-text)" : "var(--secondary-text)",
           }}
           onMouseEnter={(e) => {
-            if (currentTab !== "settings") {
+            if (activeSession !== "settings") {
               e.currentTarget.style.backgroundColor = "var(--hover-bg)";
               e.currentTarget.style.color = "var(--primary-text)";
               const icon = e.currentTarget.querySelector("svg");
@@ -239,7 +242,7 @@ const Sidebar = ({
             }
           }}
           onMouseLeave={(e) => {
-            if (currentTab !== "settings") {
+            if (activeSession !== "settings") {
               e.currentTarget.style.backgroundColor = "transparent";
               e.currentTarget.style.color = "var(--secondary-text)";
               const icon = e.currentTarget.querySelector("svg");
@@ -252,7 +255,7 @@ const Sidebar = ({
             className="shrink-0 transition-colors duration-150"
             style={{
               color:
-                currentTab === "settings"
+                activeSession === "settings"
                   ? "var(--primary-text)"
                   : "var(--muted-icon)",
             }}
@@ -265,3 +268,4 @@ const Sidebar = ({
 };
 
 export default Sidebar;
+// 4.28.01
