@@ -81,7 +81,7 @@ export const singleProject = async (req, res) => {
 
         // 2. get project 
         const project = await Project.findOne({
-            _id:projectId, // if you create project mongodb assing projecID // you get project id using {req.params.projectId}
+            _id: projectId, // if you create project mongodb assing projecID // you get project id using {req.params.projectId}
             owner: userId
         })
 
@@ -112,7 +112,7 @@ export const getSatrredProject = async (req, res) => {
         const key = `project-${userId}`
         let result = await redis.get(key)
 
-        if(result){
+        if (result) {
             return res.status(200).json(JSON.parse(result))
         }
 
@@ -123,7 +123,7 @@ export const getSatrredProject = async (req, res) => {
         }).sort({ updatedAt: -1 })  // show new updated project on top
 
         // set starred projects in redis 
-        await redis.set(key,JSON.stringify(stProject))
+        await redis.set(key, JSON.stringify(stProject))
 
         return res.status(200).json(stProject)
 
@@ -176,7 +176,7 @@ export const deleteProject = async (req, res) => {
         }
 
         // Update and delete in redis
-        const key =`project-${userId}`
+        const key = `project-${userId}`
         // Delete key in redis
         await redis.del(key)
 

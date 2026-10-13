@@ -3,17 +3,17 @@ import { allProjects, createProject, deleteProject, getSatrredProject, singlePro
 
 const router = express.Router();
 
-router.post("/",createProject);
-router.get("/",allProjects);
-router.post("/satrred",getSatrredProject);
+router.post("/", createProject);
+router.get("/", allProjects);
+router.post("/satrred", getSatrredProject);
 
 // get project by id route
-router.get("/:id",singleProject)
+router.get("/:id", singleProject)
 
 // why {patch} because update ho rha hai and same get by project id
-router.patch("/:id",toggleStarraedProject);
+router.patch("/:id", toggleStarraedProject);
 
 // Deleter projec using by id 
-router.delete("/:id",deleteProject)
+router.delete("/:id", deleteProject)
 
 export default router;
