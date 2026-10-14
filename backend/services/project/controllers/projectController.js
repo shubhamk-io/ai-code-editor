@@ -7,7 +7,7 @@ import Project from "../models/projectModel.js";;
 export const createProject = async (req, res) => {
     try {
         // 1. Get user id by header 
-        const userId = req.header["x-user-id"]
+        const userId = req.headers["x-user-id"]
         if (!userId) {
             return res.status(401).json({ message: "User id is required" })
         }
@@ -40,7 +40,7 @@ export const createProject = async (req, res) => {
 export const allProjects = async (req, res) => {
     try {
         // 1. Get userId to access id and owner 
-        const userId = req.header["x-user-id"];
+        const userId = req.headers["x-user-id"];
 
         if (!userId) {
             return res.status(401).json({ message: "User is required" });
@@ -75,7 +75,7 @@ export const allProjects = async (req, res) => {
 export const singleProject = async (req, res) => {
     try {
         // 1. Get user Id by header 
-        const userId = req.header["x-user-id"];
+        const userId = req.headers["x-user-id"];
 
         const projectId = req.params.id; // you get project id using {req.params.projectId}
 
@@ -104,7 +104,7 @@ export const singleProject = async (req, res) => {
 export const getSatrredProject = async (req, res) => {
     try {
         // 1. get user id by header
-        const userId = req.header["x-user-id"];
+        const userId = req.headers["x-user-id"];
         if (!userId) {
             return res.status(401).json({ message: "User id is required " })
         }

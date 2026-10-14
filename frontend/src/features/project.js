@@ -15,7 +15,7 @@ export const createProject = async ({ name, description }) => {
 // get single Project api fectch
 export const getSingleProject = async (projectId) => {
   try {
-    const { data } = await axios.get(`"/api/singleProject",${projectId}`)
+    const { data } = await axios.get(`/api/project/${projectId}`)
     return data
   } catch (error) {
     console.log(error)
@@ -26,7 +26,7 @@ export const getSingleProject = async (projectId) => {
 // Get all project 
 export const getAllProjects = async () => {
   try {
-    const { data } = await axios.get("/api/allProjects")
+    const { data } = await axios.get("/api/project")
     return data
   } catch (error) {
     console.log(error)
@@ -38,7 +38,7 @@ export const getAllProjects = async () => {
 // Get starred projects // 
 export const starredProject = async () => {
   try {
-    const { data } = axios.get("/api/satrred")
+    const { data } = await axios.post("/api/project/satrred")
     return data
   } catch (error) {
     console.log(error)
@@ -49,7 +49,7 @@ export const starredProject = async () => {
 // Get toggle starred projects
 export const toggleStarraedProject = async (id) => {
   try {
-    const { data } = await axios.patch(`/api/project,${id}`)
+    const { data } = await axios.patch(`/api/project/${id}`)
     return data;
   } catch (error) {
     console.log(error)
@@ -60,7 +60,7 @@ export const toggleStarraedProject = async (id) => {
 // Delete project 
 export const deleteProject = async (id) => {
   try {
-    const { data } = await axios.delete(`/api/project,${id}`)
+    const { data } = await axios.delete(`/api/project/${id}`)
     return data;
   } catch (error) {
     console.log(error)

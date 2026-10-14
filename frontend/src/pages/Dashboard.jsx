@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState , useEffect} from "react";
 import { signInWithPopup } from "firebase/auth";
 import { FcGoogle } from "react-icons/fc";
 import {
@@ -21,6 +21,8 @@ import NavBar from "../components/NavBar.jsx";
 import Sidebar from "../components/Sidebar.jsx";
 import { useTheme } from "../context/ThemeContext";
 import AddIcon from '@mui/icons-material/Add';
+import { setProjects, setStarredProjects } from "../redux/projectSlice.js";
+import { getAllProjects as getAllProjectsApi, starredProject } from "../features/project.js";
 
 const Dashboard = () => {
   const [loading, setLoading] = useState(false);
@@ -71,12 +73,35 @@ const Dashboard = () => {
   // Fetch All projects Data 
   const getAllProjects = async () => {
     try {
-      const data = await getAllProjects();
+      const data = await getAllProjectsApi();
+      dispatch(setProjects(data))
       console.log(data)
     } catch (error) {
-
+      console.log("Fetch All project error:", error)
     }
   }
+
+  // Fetch Starred Projects //
+  const fetchStarreProjects = async () => {
+    try {
+      const data = await starredProject()
+      dispatch(setStarredProjects(data))
+    } catch (error) {
+      console.log("Fetch starred error:", error)
+    }
+  }
+
+  // using use effect to fetch projects all and starred if when on activesession per agr projects per hai all projects agr starred projects hai to starred projects show kero 
+  useEffect(() => {
+    if (!userData) return; // don't fetch if not logged in
+    if (activeSession === "project") {
+      getAllProjects();
+    } else {
+      fetchStarreProjects();
+    }
+  }, [activeSession, userData])
+
+
 
   // ── 1. Login Screen (when not authenticated) ──────────────────────────
   if (!userData) {
