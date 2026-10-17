@@ -19,10 +19,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { setUserData } from "../redux/userSlice.js";
 import NavBar from "../components/NavBar.jsx";
 import Sidebar from "../components/Sidebar.jsx";
+import ProjectCard from "../components/projectCard.jsx";
 import { useTheme } from "../context/ThemeContext";
 import AddIcon from '@mui/icons-material/Add';
-import { setProjects, } from "../redux/projectSlice.js";
-import { getAllProjects as getAllProjectsApi, starredProject } from "../features/project.js";
+import { setProjects, addNewProject, toggleProjectStar } from "../redux/projectSlice.js";
+import { getAllProjects as getAllProjectsApi, starredProject, createProject, toggleStarraedProject } from "../features/project.js";
 
 const Dashboard = () => {
   const [loading, setLoading] = useState(false);
@@ -43,10 +44,44 @@ const Dashboard = () => {
 
   const handleCreateProject = async (e) => {
     e?.preventDefault();
+    if (!projectName.trim()) {
+      setErrorMsg("Project name is required");
+      return;
+    }
+
+    try {
+      setIsCreating(true);
+      setErrorMsg("");
+      const newProject = await createProject({
+        name: projectName.trim(),
+        description: projectDesc.trim(),
+      });
+
+      if (newProject) {
+        dispatch(addNewProject(newProject));
+        setProjectName("");
+        setProjectDesc("");
+        setIsCreateModalOpen(false); // automatically remove create project popup
+      } else {
+        setErrorMsg("Failed to create project");
+      }
+    } catch (err) {
+      setErrorMsg(err.response?.data?.message || "Failed to create project");
+    } finally {
+      setIsCreating(false);
+    }
   };
 
-  const handleToggleStar = (e, id) => {
+  const handleToggleStar = async (e, id) => {
     e?.stopPropagation();
+    if (!id) return;
+    dispatch(toggleProjectStar(id));
+    try {
+      await toggleStarraedProject(id);
+    } catch (error) {
+      console.error("Toggle star error:", error);
+      dispatch(toggleProjectStar(id));
+    }
   };
 
   const handleDeleteProject = (e, id) => {
@@ -423,93 +458,11 @@ const Dashboard = () => {
             /* Projects Grid */
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
               {displayedProjects?.map((project) => (
-                <div
+                <ProjectCard
                   key={project._id}
-                  className="group p-5 rounded-2xl border transition-all duration-200 hover:-translate-y-1 hover:shadow-lg cursor-pointer flex flex-col justify-between"
-                  style={{
-                    backgroundColor: "var(--card-bg)",
-                    borderColor: "var(--border-color)",
-                  }}
-                >
-                  <div>
-                    <div className="flex items-center justify-between mb-3">
-                      <div
-                        className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
-                        style={{
-                          backgroundColor: "rgba(99, 102, 241, 0.12)",
-                          color: "var(--accent-color)",
-                        }}
-                      >
-                        <FiFolder size={18} />
-                      </div>
-
-                      <div className="flex items-center gap-1">
-                        <button
-                          type="button"
-                          onClick={(e) => handleToggleStar(e, project._id)}
-                          title={project.starred ? "Unstar project" : "Star project"}
-                          aria-label={project.starred ? "Unstar project" : "Star project"}
-                          className="p-1.5 rounded-lg transition-colors duration-150 cursor-pointer"
-                          style={{
-                            color: project.starred ? "#EAB308" : "var(--muted-icon)",
-                          }}
-                          onMouseEnter={(e) =>
-                            (e.currentTarget.style.backgroundColor = "var(--hover-bg)")
-                          }
-                          onMouseLeave={(e) =>
-                            (e.currentTarget.style.backgroundColor = "transparent")
-                          }
-                        >
-                          <FiStar
-                            size={16}
-                            fill={project.starred ? "#EAB308" : "none"}
-                          />
-                        </button>
-                        <button
-                          type="button"
-                          onClick={(e) => handleDeleteProject(e, project._id)}
-                          title="Delete project"
-                          aria-label="Delete project"
-                          className="p-1.5 rounded-lg text-slate-400 hover:text-red-500 transition-colors duration-150 cursor-pointer"
-                          onMouseEnter={(e) =>
-                            (e.currentTarget.style.backgroundColor = "var(--hover-bg)")
-                          }
-                          onMouseLeave={(e) =>
-                            (e.currentTarget.style.backgroundColor = "transparent")
-                          }
-                        >
-                          <FiTrash2 size={16} />
-                        </button>
-                      </div>
-                    </div>
-
-                    <h3 className="font-semibold text-sm text-slate-900 dark:text-white truncate mb-1 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
-                      {project.name}
-                    </h3>
-                    <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2 min-h-[32px] leading-relaxed">
-                      {project.description || "No description provided"}
-                    </p>
-                  </div>
-
-                  <div
-                    className="mt-4 pt-3 flex items-center justify-between text-[11px] border-t"
-                    style={{
-                      borderColor: "var(--border-color)",
-                      color: "var(--secondary-text)",
-                    }}
-                  >
-                    <span className="flex items-center gap-1.5">
-                      <FiClock size={12} />
-                      {new Date(project.updatedAt || project.createdAt || Date.now()).toLocaleDateString("en-US", {
-                        month: "short",
-                        day: "numeric",
-                      })}
-                    </span>
-                    <span className="text-[11px] font-medium text-indigo-500 group-hover:underline">
-                      Open →
-                    </span>
-                  </div>
-                </div>
+                  project={project}
+                  onToggleStar={handleToggleStar}
+                />
               ))}
             </div>
           )}

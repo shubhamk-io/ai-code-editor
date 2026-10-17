@@ -106,10 +106,10 @@ export const getSatrredProject = async (req, res) => {
         // 1. get user id by header
         const userId = req.headers["x-user-id"];
         if (!userId) {
-            return res.status(401).json({ message: "User id is required " })
+            return res.status(401).json({ message: "User id is required" })
         }
 
-        const key = `project-${userId}`
+        const key = `starred-project-${userId}`
         let result = await redis.get(key)
 
         if (result) {
@@ -133,32 +133,29 @@ export const getSatrredProject = async (req, res) => {
 }
 
 
-// Toggle starrated project
-export const toggleStarraedProject = async () => {
+// Toggle starred project
+export const toggleStarraedProject = async (req, res) => {
     try {
-        // 1. Get id by req.params
-        const { id } = req.params
+        const userId = req.headers["x-user-id"];
+        const { id } = req.params;
 
-        // 32. find project by id and then toggle like [true / false]
-        const project = await Project.findById(id)
+        const project = await Project.findOne({ _id: id, owner: userId });
         if (!project) {
-            return res.status(404).json({ message: "Project isn not found" })
+            return res.status(404).json({ message: "Project not found" });
         }
 
-        // Creating redis key using Id
-        const key = `starred-project-${userId}`
+        project.starred = !project.starred;
+        await project.save();
 
-        // if project is true to false  // false to true ker do 
-        project.starred = !project.starred
-        project.save()  // project save.
+        if (userId) {
+            await redis.del(`project-${userId}`);
+            await redis.del(`starred-project-${userId}`);
+        }
 
-        // Delete redis key
-        await res.del(key)
-
-        return res.json(200).json(project)
+        return res.status(200).json(project);
 
     } catch (error) {
-        return res.status(500).json({ message: `Toggle starred prject error ${error}` })
+        return res.status(500).json({ message: `Toggle starred project error: ${error}` });
     }
 }
 

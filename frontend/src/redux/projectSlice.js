@@ -16,9 +16,18 @@ const projectSlice = createSlice({
         addNewProject: (state, action) => {
             state.projects.unshift(action.payload)  // end mai  element ko push kerne k liye push() method  // and starting mai push kerne k liye{ unShift()} method
         },
+
+        // toggle starred state of a project
+        toggleProjectStar: (state, action) => {
+            const id = action.payload;
+            const project = state.projects?.find((p) => p._id === id);
+            if (project) {
+                project.starred = !project.starred;
+            }
+        },
     },
 });
 
-export const { setProjects, addNewProject,} = projectSlice.actions;
+export const { setProjects, addNewProject, toggleProjectStar } = projectSlice.actions;
 
 export default projectSlice.reducer;
