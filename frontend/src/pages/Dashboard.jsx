@@ -1,4 +1,4 @@
-import React, { useState , useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import { signInWithPopup } from "firebase/auth";
 import { FcGoogle } from "react-icons/fc";
 import {
@@ -21,7 +21,7 @@ import NavBar from "../components/NavBar.jsx";
 import Sidebar from "../components/Sidebar.jsx";
 import { useTheme } from "../context/ThemeContext";
 import AddIcon from '@mui/icons-material/Add';
-import { setProjects, setStarredProjects } from "../redux/projectSlice.js";
+import { setProjects, } from "../redux/projectSlice.js";
 import { getAllProjects as getAllProjectsApi, starredProject } from "../features/project.js";
 
 const Dashboard = () => {
@@ -29,7 +29,7 @@ const Dashboard = () => {
   const [activeSession, setActiveSession] = useState("project")
   const dispatch = useDispatch();
   const { userData } = useSelector((state) => state.user);
-  const { projects = [], starredProjects = [] } = useSelector((state) => state.projects || {});
+  const { projects = [] } = useSelector((state) => state.projects || {});
   const { isDark, toggleTheme } = useTheme();
 
   const [projectsLoading, setProjectsLoading] = useState(false);
@@ -39,7 +39,7 @@ const Dashboard = () => {
   const [isCreating, setIsCreating] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
 
-  const displayedProjects = activeSession === "starred" ? (starredProjects || []) : (projects || []);
+  const displayedProjects = activeSession === "starred" ? (projects || []).filter((p) => p.starred) : (projects || []);
 
   const handleCreateProject = async (e) => {
     e?.preventDefault();
@@ -73,9 +73,11 @@ const Dashboard = () => {
   // Fetch All projects Data 
   const getAllProjects = async () => {
     try {
+      setProjectsLoading(true)
       const data = await getAllProjectsApi();
       dispatch(setProjects(data))
       console.log(data)
+      setProjectsLoading(false)
     } catch (error) {
       console.log("Fetch All project error:", error)
     }
@@ -84,8 +86,10 @@ const Dashboard = () => {
   // Fetch Starred Projects //
   const fetchStarreProjects = async () => {
     try {
+      setProjectsLoading(true)
       const data = await starredProject()
-      dispatch(setStarredProjects(data))
+      dispatch(setProjects(data))
+      setProjectsLoading(false)
     } catch (error) {
       console.log("Fetch starred error:", error)
     }

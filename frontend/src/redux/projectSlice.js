@@ -16,13 +16,9 @@ const projectSlice = createSlice({
         addNewProject: (state, action) => {
             state.projects.unshift(action.payload)  // end mai  element ko push kerne k liye push() method  // and starting mai push kerne k liye{ unShift()} method
         },
-        // set Starred projects in array
-        setStarredProjects: (state, action) => {
-            state.starredProjects = action.payload;
-        }
     },
 });
 
-export const { setProjects, addNewProject, setStarredProjects } = projectSlice.actions;
+export const { setProjects, addNewProject,} = projectSlice.actions;
 
 export default projectSlice.reducer;
