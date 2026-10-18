@@ -1,8 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
-import { FiFolder, FiStar, FiClock, FiMoreVertical } from "react-icons/fi";
+import { FiFolder, FiStar, FiClock, FiMoreVertical, FiTrash2 } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 
-const ProjectCard = ({ project, onToggleStar }) => {
+const ProjectCard = ({ project, onToggleStar, onDelete }) => {
   const navigate = useNavigate();
   const [showMenu, setShowMenu] = useState(false);
   const menuRef = useRef(null);
@@ -47,6 +47,14 @@ const ProjectCard = ({ project, onToggleStar }) => {
   const handleMenuClick = (e) => {
     e.stopPropagation();
     setShowMenu((prev) => !prev);
+  };
+
+  const handleDeleteClick = (e) => {
+    e.stopPropagation();
+    setShowMenu(false);
+    if (onDelete) {
+      onDelete(e, project?._id);
+    }
   };
 
   return (
@@ -120,7 +128,7 @@ const ProjectCard = ({ project, onToggleStar }) => {
               {/* Dropdown Menu */}
               {showMenu && (
                 <div
-                  className="absolute right-0 top-full mt-1.5 w-36 rounded-xl border p-1 shadow-xl z-30 transition-all text-xs"
+                  className="absolute right-0 top-full mt-1.5 w-32 rounded-xl border p-1 shadow-xl z-30 transition-all text-xs"
                   style={{
                     backgroundColor: "var(--card-bg)",
                     borderColor: "var(--border-color)",
@@ -130,10 +138,11 @@ const ProjectCard = ({ project, onToggleStar }) => {
                 >
                   <button
                     type="button"
-                    onClick={() => setShowMenu(false)}
-                    className="w-full text-left px-3 py-2 rounded-lg transition-colors hover:bg-slate-100 dark:hover:bg-slate-800"
+                    onClick={handleDeleteClick}
+                    className="w-full text-left px-3 py-2 rounded-lg transition-colors flex items-center gap-2 text-red-500 hover:text-red-600 hover:bg-red-500/10 cursor-pointer font-medium"
                   >
-                    Options
+                    <FiTrash2 size={14} />
+                    <span>Delete</span>
                   </button>
                 </div>
               )}

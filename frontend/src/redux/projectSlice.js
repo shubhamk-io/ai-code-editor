@@ -25,9 +25,15 @@ const projectSlice = createSlice({
                 project.starred = !project.starred;
             }
         },
+
+        // remove project from state
+        removeProject: (state, action) => {
+            const id = action.payload;
+            state.projects = state.projects?.filter((p) => p._id !== id) || [];
+        },
     },
 });
 
-export const { setProjects, addNewProject, toggleProjectStar } = projectSlice.actions;
+export const { setProjects, addNewProject, toggleProjectStar, removeProject } = projectSlice.actions;
 
 export default projectSlice.reducer;

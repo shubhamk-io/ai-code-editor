@@ -22,8 +22,8 @@ import Sidebar from "../components/Sidebar.jsx";
 import ProjectCard from "../components/projectCard.jsx";
 import { useTheme } from "../context/ThemeContext";
 import AddIcon from '@mui/icons-material/Add';
-import { setProjects, addNewProject, toggleProjectStar } from "../redux/projectSlice.js";
-import { getAllProjects as getAllProjectsApi, starredProject, createProject, toggleStarraedProject } from "../features/project.js";
+import { setProjects, addNewProject, toggleProjectStar, removeProject } from "../redux/projectSlice.js";
+import { getAllProjects as getAllProjectsApi, starredProject, createProject, toggleStarraedProject, deleteProject as deleteProjectApi } from "../features/project.js";
 
 const Dashboard = () => {
   const [loading, setLoading] = useState(false);
@@ -84,8 +84,17 @@ const Dashboard = () => {
     }
   };
 
-  const handleDeleteProject = (e, id) => {
+  const handleDeleteProject = async (e, id) => {
     e?.stopPropagation();
+    if (!id) return;
+    try {
+      const res = await deleteProjectApi(id);
+      if (res) {
+        dispatch(removeProject(id));
+      }
+    } catch (error) {
+      console.error("Delete project error:", error);
+    }
   };
 
   // Firebase Google login
@@ -462,6 +471,7 @@ const Dashboard = () => {
                   key={project._id}
                   project={project}
                   onToggleStar={handleToggleStar}
+                  onDelete={handleDeleteProject}
                 />
               ))}
             </div>
