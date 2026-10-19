@@ -31,6 +31,8 @@ app.use("/api/auth", proxy(process.env.AUTH_SERVIECE, {
 // first check user hai ya nhi using protectMiddleware the next go to project
 app.use("/api/project", protectMiddleware, proxyWithHeaders(process.env.PROJECT_SERVIECE)); // USING PROXYHEADER TO SEND DATA HEADER
 
+app.use("/api/file",protectMiddleware, proxyWithHeaders(process.env.FILE_SERVIECE))
+
 app.get("/api/me", protectMiddleware, getCurrentUser);
 
 app.get("/", (req, res) => {

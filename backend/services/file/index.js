@@ -1,22 +1,26 @@
 import "dotenv/config"
-import express from "express" 
-import {connectDb} from "/config/db.js"
+import express from "express"
+
 import cookieParser from "cookie-parser"
+import { connectDb } from "./config/db.js";
 
-
-
-const port = process.env.PORT 
+const port = process.env.PORT || 8003;
 
 const app = express();
 app.use(express.json());
 app.use(cookieParser())
 
-app.use("/"router) // es router ko import kerna hai  ------------ imp
-app.use("/api/file", (req , res) => {
-    res.json(
-        Message: "Hello from file page"
-    )
+app.get("/", (req, res) => {
+    res.json({
+        message: "Hello from file service"
+    });
+});
+app.use("/api/file", (req, res) => {
+    res.json({
+        message: "Hello from file page"
+    })
 })
+
 
 app.listen(port, () => {
     connectDb();
