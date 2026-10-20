@@ -1,44 +1,44 @@
 import mongoose, { mongo, trusted } from "mongoose";
 
 const fileSchema = new mongoose.Schema({
-    owner : {
+    owner: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
-        required:true
+        required: true
     },
     parentId: {
         type: mongoose.Schema.type.ObjectId,
-        ref:"File",
+        ref: "File",
         default: null
-    }, 
+    },
     projectId: {
         type: mongoose.Schema.type.ObjectId,
-        ref:"Project",
-        required:true
+        ref: "Project",
+        required: true
     },
     name: {
-        type:String,
+        type: String,
         required: true
     },
     type: {
         type: String,
         enum: ["folder", "file"],
-        required:true
+        required: true
     },
     extension: {
-        type:String,
-        default:""
-    }, 
+        type: String,
+        default: ""
+    },
     language: {
-    type: String,
-    default: "plaintext",
+        type: String,
+        default: "plaintext",
     },
     content: {
         type: String,
         default: ""
     },
-    size:{
-        type:Number,
+    size: {
+        type: Number,
         default: 0
     },
     isDeleted: {
@@ -46,7 +46,7 @@ const fileSchema = new mongoose.Schema({
         default: false
     }
 
-}, {timestamps: true})
+}, { timestamps: true })
 
 
 const File = mongoose.model("File", fileSchema)

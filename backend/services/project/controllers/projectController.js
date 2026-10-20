@@ -159,7 +159,6 @@ export const toggleStarraedProject = async (req, res) => {
     }
 }
 
-
 // Delete project function ///
 export const deleteProject = async (req, res) => {
     try {

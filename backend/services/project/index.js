@@ -15,13 +15,6 @@ app.use(cookieParser())
 
 
 app.use("/", router)
-app.use("/api/project", (req, res) => {
-    res.json(
-        {
-            Message: "Hello from project page"
-        }
-    )
-})
 
 app.listen(port, () => {
     connectDb()

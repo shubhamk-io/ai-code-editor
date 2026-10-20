@@ -29,7 +29,7 @@ export const createRootFile = async (req, res) => {
         return res.status(201).json(rootFolder)
 
     } catch (error) {
-return res.status(500).json({Message: `Create root folder Error : ${error}`})
+        return res.status(500).json({ Message: `Create root folder Error : ${error}` })
     }
 }
 
@@ -38,36 +38,79 @@ return res.status(500).json({Message: `Create root folder Error : ${error}`})
 
 export const createFolder = async (req, res) => {
     try {
-        const {projectId , name , parentId} = req.body
+        const { projectId, name, parentId } = req.body
         const userId = req.headers["x-user-id"]
 
-       if(!projectId || !name || parentId){
-        return res.status(200).json({message:"projectId and name are requiredc"})
-       }
-       
+        if (!projectId || !name || parentId) {
+            return res.status(200).json({ message: "projectId and name are requiredc" })
+        }
+
 
         const exist = await File.findOne({
             name,
             projectId,
             parentId,
-            isDeleted:false
+            isDeleted: false
         })
         // if folder check exist if exist then show
-        if(exist) {
-            return res.status(400).json({message:"folder already exist"})
+        if (exist) {
+            return res.status(400).json({ message: "folder already exist" })
         }
 
         const folder = await File.create({
-            owner:userId,
+            owner: userId,
             name,
             projectId,
-            type,"folder",
+            type: "folder",
             parentId
         })
 
-        return res.status(201).json({folder})
-        
+        return res.status(201).json({ folder })
+
     } catch (error) {
-        return res.status(500).json({message:`Creae Folder error: ${error}`})
+        return res.status(500).json({ message: `Creae Folder error: ${error}` })
     }
+}
+
+
+// Create file  feature   
+export const createFile = async (req, res) => {
+    try {
+
+        const { projectId, projectName, name, content = "", language = "plainText" } = req.body
+        const userId = req.headers["x-user-id"]
+
+        if (!projectId || !name || !projectName) {
+            return res.status(400).json({ message: "File name projectid are required" })
+        }
+
+        const exist = await File.findOne({
+            projectId, 
+            name,
+            parentId,
+            isDeleted : false,
+        })
+        
+        if (exist) {
+            return res.status(400).json({ message: "File already exist" })
+        }
+
+        const extension = name.includes(".")?name.split(".").pop(): " "
+
+        const file = await File.create({
+            owner: userId,
+            name,
+            projectId,
+            content,
+            extension,
+            parentId : parentId || null ,
+            type: "file"
+        })
+
+        return res.status(200).json(file)
+
+    } catch (error) {
+
+    }
+
 }
