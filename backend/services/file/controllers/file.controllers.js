@@ -1,3 +1,4 @@
+import { useId } from "react"
 import File from "../model/file.model"
 
 export const createRootFile = async (req, res) => {
@@ -68,7 +69,7 @@ export const createFolder = async (req, res) => {
         return res.status(201).json({ folder })
 
     } catch (error) {
-        return res.status(500).json({ message: `Creae Folder error: ${error}` })
+        return res.status(500).json({ message: `Create Folder error: ${error}` })
     }
 }
 
@@ -85,17 +86,17 @@ export const createFile = async (req, res) => {
         }
 
         const exist = await File.findOne({
-            projectId, 
+            projectId,
             name,
             parentId,
-            isDeleted : false,
+            isDeleted: false,
         })
-        
+
         if (exist) {
             return res.status(400).json({ message: "File already exist" })
         }
 
-        const extension = name.includes(".")?name.split(".").pop(): " "
+        const extension = name.includes(".") ? name.split(".").pop() : " "
 
         const file = await File.create({
             owner: userId,
@@ -103,14 +104,50 @@ export const createFile = async (req, res) => {
             projectId,
             content,
             extension,
-            parentId : parentId || null ,
+            parentId: parentId || null,
             type: "file"
         })
 
         return res.status(200).json(file)
 
     } catch (error) {
-
+        return res.status(500).json({ message: `Create file error: ${error}` })
     }
 
 }
+
+export const updateFile = async (req, res) => {
+    try {
+        const userId = req.headers["x-user-id"]
+        const { name, content } = req.body
+
+        // find project by id 
+        const { id } = req.params
+
+        const file = await File.updateOne({
+            _id: id,
+            owner: userId,
+            isDeleted: false
+        })
+
+        if (name) {
+            file.name = name
+            const extension = name.includes(".") ? name.split(".").pop() : ""
+        }
+
+        if (content !== undefined) {
+            file.content = content,
+                file.size = content.length
+        }
+
+        await file.save()
+
+        return res.status(200).json(file)
+
+    } catch (error) {
+        return res.status(500).json({ message: `Update File error: ${error}` })
+    }
+}
+
+
+// Delete function create
