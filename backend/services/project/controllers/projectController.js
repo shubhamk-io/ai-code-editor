@@ -162,6 +162,7 @@ export const toggleStarraedProject = async (req, res) => {
 // Delete project function ///
 export const deleteProject = async (req, res) => {
     try {
+
         // 1. Get project id using req.params //
         const { id } = req.params;
         const userId = req.headers["x-user-id"];
