@@ -151,3 +151,42 @@ export const updateFile = async (req, res) => {
 
 
 // Delete function create
+
+export const  deleteFile = async  (req,res) => {
+    try {
+        const userId = req.headers["x-user-id"]
+        const {id} = req.params
+
+        const file = await File.deleteOne({
+            _id: id,
+            userId: userId,
+isDeleted:true
+        })
+        return res(200).json({message:`File delete succsuflly}`}, file)
+
+    } catch (error) {
+        return res.status(500).json({message:`File Delete funciton error: ${error}`})
+    }
+}
+
+
+export const getFile = async (req,res) => {
+    try {
+        const userId  = req.headers["x-user-id"]
+        const {id }= req.params
+
+        const file = await File.findById({
+            _id: id,
+            userId:userId
+        })
+
+        if(!file){
+            return res.status(400).json({Message:"File not found"})
+        }
+
+        return res.status(200).json(file)
+
+    } catch (error) {
+        return res.status(500).json({message:`Get file Error: ${error}`})
+    }
+}
