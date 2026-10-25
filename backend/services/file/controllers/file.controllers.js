@@ -1,8 +1,8 @@
-import { useId } from "react"
-import File from "../model/file.model"
-import { buildTree } from "../utils/buildTree"
 
-export const createRootFile = async (req, res) => {
+import File from "../model/file.model.js"
+import { buildTree } from "../utils/buildTree.js"
+
+export const createRootFolder = async (req, res) => {
     try {
         const { projectId, projectName } = req.body
         const userId = req.headers["x-user-id"]
@@ -43,7 +43,7 @@ export const createFolder = async (req, res) => {
         const { projectId, name, parentId } = req.body
         const userId = req.headers["x-user-id"]
 
-        if (!projectId || !name || parentId) {
+        if (!projectId || !name || !parentId) {
             return res.status(200).json({ message: "projectId and name are requiredc" })
         }
 
@@ -79,7 +79,7 @@ export const createFolder = async (req, res) => {
 export const createFile = async (req, res) => {
     try {
 
-        const { projectId, projectName, name, content = "", language = "plainText" } = req.body
+        const { projectId, projectName, name, parentId, content = "", language = "plainText" } = req.body
         const userId = req.headers["x-user-id"]
 
         if (!projectId || !name || !projectName) {
@@ -125,7 +125,7 @@ export const updateFile = async (req, res) => {
         // find project by id 
         const { id } = req.params
 
-        const file = await File.updateOne({
+        const file = await File.findOne({
             _id: id,
             owner: userId,
             isDeleted: false
@@ -133,7 +133,7 @@ export const updateFile = async (req, res) => {
 
         if (name) {
             file.name = name
-            const extension = name.includes(".") ? name.split(".").pop() : ""
+            file.extension = name.includes(".") ? name.split(".").pop() : ""
         }
 
         if (content !== undefined) {
@@ -158,12 +158,11 @@ export const deleteFile = async (req, res) => {
         const userId = req.headers["x-user-id"]
         const { id } = req.params
 
-        const file = await File.deleteOne({
+        const file = await File.findOneAndDelete({
             _id: id,
-            userId: userId,
-            isDeleted: true
+            owner: userId
         })
-        return res(200).json({ message: `File delete succsuflly}` }, file)
+        return res.status(200).json({ message: "File deleted successfully", file })
 
     } catch (error) {
         return res.status(500).json({ message: `File Delete funciton error: ${error}` })
@@ -176,9 +175,9 @@ export const getFile = async (req, res) => {
         const userId = req.headers["x-user-id"]
         const { id } = req.params
 
-        const file = await File.findById({
+        const file = await File.findOne({
             _id: id,
-            userId: userId
+            owner: userId
         })
 
         if (!file) {
@@ -190,6 +189,8 @@ export const getFile = async (req, res) => {
     } catch (error) {
         return res.status(500).json({ message: `Get file Error: ${error}` })
     }
+
+    // return res.status(500).json({message:"Login erro in file route"})
 }
 
 

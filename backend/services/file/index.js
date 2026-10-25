@@ -3,6 +3,7 @@ import express from "express"
 
 import cookieParser from "cookie-parser"
 import { connectDb } from "./config/db.js";
+import router from "./routes/file.route.js";
 
 const port = process.env.PORT || 8003;
 
@@ -21,6 +22,7 @@ app.use("/api/file", (req, res) => {
     })
 })
 
+app.use("/",router)
 
 app.listen(port, () => {
     connectDb();

@@ -1,6 +1,5 @@
-import { useId } from "react";
 import redis from "../../../shared/redis.js";
-import Project from "../models/projectModel.js";;
+import Project from "../models/projectModel.js";
 
 
 
@@ -90,7 +89,7 @@ export const singleProject = async (req, res) => {
             return res.status(404).json({ message: "project not found" })
         }
 
-        project.lastOpendAt = new Data() // update project date jo last the oo update ho jyege
+        project.lastOpendAt = new Date() // update project date jo last the oo update ho jyege
         await project.save()  // save project
 
         return res.status(200).json(project)

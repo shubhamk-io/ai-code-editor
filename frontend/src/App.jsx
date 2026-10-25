@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import { BrowserRouter, Route, Routes,Navigate } from "react-router-dom"
 import Dashboard from './pages/Dashboard'
+import ProjectPage from './pages/projectPage'
 import { me } from './features/me'
 import { useDispatch } from 'react-redux'
 import { setUserData } from './redux/userSlice'
@@ -36,6 +37,7 @@ const App = () => {
     <Routes>
       <Route path="/" element={<Navigate to="/dashboard" />} />
       <Route path="/dashboard" element={<Dashboard/>} />
+      <Route path='/project/:id' element={<ProjectPage />} />
     </Routes>
   </BrowserRouter>
   )

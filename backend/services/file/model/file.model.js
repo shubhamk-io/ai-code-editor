@@ -1,4 +1,4 @@
-import mongoose, { mongo, trusted } from "mongoose";
+import mongoose from "mongoose";
 
 const fileSchema = new mongoose.Schema({
     owner: {
@@ -7,12 +7,12 @@ const fileSchema = new mongoose.Schema({
         required: true
     },
     parentId: {
-        type: mongoose.Schema.type.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: "File",
         default: null
     },
     projectId: {
-        type: mongoose.Schema.type.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: "Project",
         required: true
     },
