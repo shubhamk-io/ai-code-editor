@@ -5,11 +5,17 @@ const projectSlice = createSlice({
     name: "projects",
     initialState: {
         projects: [], // this is using to store projects in array to show easily.
-        starredProjects: []  // this is using to store starred projects in array to show easily
+        starredProjects: [],  // this is using to store starred projects in array to show easily
+    currentProject: null
     },
     reducers: {
         setProjects: (state, action) => {
             state.projects = action.payload
+        },
+
+        //
+        setCurrentProject:(state ,action) => {
+            state.currentProject = action.payload
         },
 
         // this reducer using to push projecst in projects state
@@ -34,6 +40,6 @@ const projectSlice = createSlice({
     },
 });
 
-export const { setProjects, addNewProject, toggleProjectStar, removeProject } = projectSlice.actions;
+export const { setProjects, addNewProject, toggleProjectStar, removeProject, setCurrentProject } = projectSlice.actions;
 
 export default projectSlice.reducer;
