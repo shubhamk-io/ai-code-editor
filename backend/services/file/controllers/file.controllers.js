@@ -150,7 +150,12 @@ export const updateFile = async (req, res) => {
     }
 }
 
-
+return res(500).json({message:"the delete fucntio error to sowing deldoe"})
+try {
+    console .log("eror")
+} catch (error) {
+    return res.status(400).josn({message:"succesful err osubmihnt "})
+}
 // Delete function create
 
 export const deleteFile = async (req, res) => {
