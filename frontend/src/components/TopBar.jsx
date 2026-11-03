@@ -2,9 +2,9 @@ import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 import { motion } from "motion/react"
 
-const TopBar = () => {
+const TopBar = ({showPreview, setShowPreview}) => {
     const { currentProject } = useSelector((state) => state.projects || {})
-    const [showPreview, setShowPreview] = useState(false)
+  
 
     return (
         <div className='relative flex h-12 items-center justify-between border-b border-white/[0.06] bg-[#111113]/90 px-4 backdrop-blur-xl'>
@@ -39,4 +39,4 @@ const TopBar = () => {
     )
 }
 
-export default TopBar
+export default TopBar
