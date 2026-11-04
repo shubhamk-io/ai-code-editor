@@ -3,14 +3,24 @@ import TopBar from '../components/TopBar'
 import ActivityBar from '../components/ActivityBar'
 import { AnimatePresence } from 'motion/react'
 import Explorer from '../components/Explorer'
+import {useParams} from "react-router-dom"
+import { getSingleProject } from '../features/project.js'
+import { useDispatch } from 'react-redux'
 
 const ProjectPage = () => {
 
+
+  const {id} = useParams()
   const [showExplorer, setShowExplorer] = useState(true)
   const [showBot, setShowBot] = useState(false)
   const [showTerminal, setShowTerminal] = useState(false)
   const [showPreview, setShowPreview] = useState(false) // top bar preview
+  const dispatch = useDispatch()
 
+const handleGetProject = async () => {
+const data = await getSingleProject(id)
+dispatch(setCurrentProject(data))  // set data in current redux state to acces esily
+ }
   
 
   return (

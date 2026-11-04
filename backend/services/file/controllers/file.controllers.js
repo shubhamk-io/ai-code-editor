@@ -150,12 +150,8 @@ export const updateFile = async (req, res) => {
     }
 }
 
-return res(500).json({message:"the delete fucntio error to sowing deldoe"})
-try {
-    console .log("eror")
-} catch (error) {
-    return res.status(400).josn({message:"succesful err osubmihnt "})
-}
+
+
 // Delete function create
 
 export const deleteFile = async (req, res) => {
@@ -167,6 +163,11 @@ export const deleteFile = async (req, res) => {
             _id: id,
             owner: userId
         })
+
+        if (!file) {
+            return res.status(404).json({ message: "File not found" })
+        }
+
         return res.status(200).json({ message: "File deleted successfully", file })
 
     } catch (error) {
@@ -195,7 +196,6 @@ export const getFile = async (req, res) => {
         return res.status(500).json({ message: `Get file Error: ${error}` })
     }
 
-    // return res.status(500).json({message:"Login erro in file route"})
 }
 
 
