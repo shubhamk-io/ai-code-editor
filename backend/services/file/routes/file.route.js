@@ -4,7 +4,7 @@ import { createFile, createFolder, createRootFolder, deleteFile, getFile, getTre
 
 const router = express.Router()
 
-router.post("/root-folder", createRootFolder)
+router.post("/create-root-folder", createRootFolder)
 router.post("/create-folder",createFolder)
 router.post("/create-File",createFile)
 router.post("/update/:id",updateFile)

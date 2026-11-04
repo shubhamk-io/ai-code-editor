@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import TopBar from '../components/TopBar'
 import ActivityBar from '../components/ActivityBar'
+import { AnimatePresence } from 'motion/react'
+import Explorer from '../components/Explorer'
 
 const ProjectPage = () => {
 
@@ -8,6 +10,8 @@ const ProjectPage = () => {
   const [showBot, setShowBot] = useState(false)
   const [showTerminal, setShowTerminal] = useState(false)
   const [showPreview, setShowPreview] = useState(false) // top bar preview
+
+  
 
   return (
     <div className='relative flex h-screen flex-col overflow-hidden bg-[#0a0a0c]'>
@@ -30,6 +34,15 @@ const ProjectPage = () => {
           showTerminal={showTerminal}
           setShowTerminal={setShowTerminal}
         />`
+
+
+        // Create explorer 
+        <AnimatePresence  initial={flase}>
+          // jb show Explorer true hoga tb he ye show ho //
+          {showExplorer && (
+            <Explorer />
+          )  }
+        </AnimatePresence>
 
         {/* Main content area — placeholder for now */}
         <div className='flex-1 overflow-hidden'>
