@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import TopBar from '../components/TopBar'
 import ActivityBar from '../components/ActivityBar'
 import { AnimatePresence } from 'motion/react'
@@ -21,6 +21,11 @@ const handleGetProject = async () => {
 const data = await getSingleProject(id)
 dispatch(setCurrentProject(data))  // set data in current redux state to acces esily
  }
+
+ useEffect(() => {  // jb jb use ke id chage hoge tb tb ye call hoga mtlb ke ye data ayega
+ handleGetProject()
+ }, [id])
+ 
   
 
   return (
