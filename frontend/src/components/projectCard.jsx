@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { FiFolder, FiStar, FiClock, FiMoreVertical, FiTrash2 } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
-import {setCurrentProject } from '../redux/projectSlice'
 
 const ProjectCard = ({ project, onToggleStar, onDelete }) => {
   const navigate = useNavigate();
@@ -32,11 +31,9 @@ const ProjectCard = ({ project, onToggleStar, onDelete }) => {
 
   // Navigate to project workspace when card or open is clicked
   const handleOpenProject = () => {
-    dispatch(setCurrentProject(project))
     if (project?._id) {
       navigate(`/project/${project._id}`);
     }
-    console.log(dispatch)
   };
 
   const handleStarClick = (e) => {

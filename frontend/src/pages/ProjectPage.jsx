@@ -6,6 +6,7 @@ import Explorer from '../components/Explorer'
 import {useParams} from "react-router-dom"
 import { getSingleProject } from '../features/project.js'
 import { useDispatch } from 'react-redux'
+import { setCurrentProject } from '../redux/projectSlice.js'
 
 const ProjectPage = () => {
 
@@ -15,6 +16,7 @@ const ProjectPage = () => {
   const [showBot, setShowBot] = useState(false)
   const [showTerminal, setShowTerminal] = useState(false)
   const [showPreview, setShowPreview] = useState(false) // top bar preview
+  const [tree, setTree] = useState([])
   const dispatch = useDispatch()
 
 const handleGetProject = async () => {
@@ -22,8 +24,14 @@ const data = await getSingleProject(id)
 dispatch(setCurrentProject(data))  // set data in current redux state to acces esily
  }
 
+ const loadTree = async () => {
+    const data = await getTree(id);
+    setTree(data)
+ }
+
  useEffect(() => {  // jb jb use ke id chage hoge tb tb ye call hoga mtlb ke ye data ayega
  handleGetProject()
+ loadTree()
  }, [id])
  
   
@@ -48,14 +56,18 @@ dispatch(setCurrentProject(data))  // set data in current redux state to acces e
           setShowBot={setShowBot}
           showTerminal={showTerminal}
           setShowTerminal={setShowTerminal}
-        />`
+        />
 
 
-        // Create explorer 
-        <AnimatePresence  initial={flase}>
-          // jb show Explorer true hoga tb he ye show ho //
+        {/* Create explorer */}
+        <AnimatePresence  initial={false}>
+          {/* jb show Explorer true hoga tb he ye show ho */}
           {showExplorer && (
-            <Explorer />
+            <Explorer 
+            projectId = {id}
+            tree = {tree}
+            reloadTree = {loadTree}
+            />
           )  }
         </AnimatePresence>
 

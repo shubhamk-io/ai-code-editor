@@ -3,7 +3,7 @@ import { AnimatePresence, motion } from "motion/react"
 import { VscFiles, VscRobot, VscTerminal } from "react-icons/vsc"
 
 
-function ActivityIcon({ icon: Icon, label, active, onClick,  }) {
+function ActivityIcon({ icon: Icon, label, active, onClick }) {
     const [hovered, setHovered] = useState(false)
 
     return (
@@ -34,7 +34,7 @@ function ActivityIcon({ icon: Icon, label, active, onClick,  }) {
 
                 <Icon
                     size={24}
-                    className={`transition-colors duration-150 ${active ? "text-sky-400" : "text-zinc-500 hover:text-zinc-300"}`}
+                    className={`transition-colors duration-150 ${active ? "text-sky-400" : "text-zinc-400 hover:text-zinc-200"}`}
                 />
             </motion.button>
 
