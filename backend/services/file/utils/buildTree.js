@@ -2,16 +2,12 @@ export const buildTree = async (files) => {
     let map = {}
     let tree = []
 
-    // 
-    files.forEach(file => { // ye file k liye hai 
-        // using map to acces parent id and everything
-        map[files._id.toString] = {
-            ...file.toObject(), // convert string to object
-            children: [] // children array
+    files.forEach(file => {
+        map[file._id.toString()] = {
+            ...file.toObject(),
+            children: []
         }
     });
-
-    // Build treee   // esmai saare childrens rahenge
 
     files.forEach(file => {
         const id = file._id.toString()
@@ -19,12 +15,11 @@ export const buildTree = async (files) => {
             const parent = map[file.parentId.toString()]
             if (parent) {
                 parent.children.push(map[id])
-            } else {
-                tree.push(map[id])
             }
+        } else {
+            tree.push(map[id])
         }
     })
 
     return tree
-
 }

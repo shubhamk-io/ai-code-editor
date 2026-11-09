@@ -24,6 +24,8 @@ import { useTheme } from "../context/ThemeContext";
 import AddIcon from '@mui/icons-material/Add';
 import { setProjects, addNewProject, toggleProjectStar, removeProject } from "../redux/projectSlice.js";
 import { getAllProjects as getAllProjectsApi, starredProject, createProject, toggleStarraedProject, deleteProject as deleteProjectApi } from "../features/project.js";
+import { createRootFolder } from "../features/fileApi.js";
+
 
 const Dashboard = () => {
   const [loading, setLoading] = useState(false);
@@ -58,6 +60,7 @@ const Dashboard = () => {
       });
 
       if (newProject) {
+        await createRootFolder({ projectId: newProject._id, projectName: newProject.name });
         dispatch(addNewProject(newProject));
         setProjectName("");
         setProjectDesc("");

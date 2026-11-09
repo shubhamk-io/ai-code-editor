@@ -3,15 +3,16 @@ import TopBar from '../components/TopBar'
 import ActivityBar from '../components/ActivityBar'
 import { AnimatePresence } from 'motion/react'
 import Explorer from '../components/Explorer'
-import {useParams} from "react-router-dom"
+import { useParams } from "react-router-dom"
 import { getSingleProject } from '../features/project.js'
 import { useDispatch } from 'react-redux'
 import { setCurrentProject } from '../redux/projectSlice.js'
+import { getTree, createRootFolder } from '../features/fileApi.js'
 
 const ProjectPage = () => {
 
 
-  const {id} = useParams()
+  const { id } = useParams()
   const [showExplorer, setShowExplorer] = useState(true)
   const [showBot, setShowBot] = useState(false)
   const [showTerminal, setShowTerminal] = useState(false)
@@ -19,22 +20,37 @@ const ProjectPage = () => {
   const [tree, setTree] = useState([])
   const dispatch = useDispatch()
 
-const handleGetProject = async () => {
-const data = await getSingleProject(id)
-dispatch(setCurrentProject(data))  // set data in current redux state to acces esily
- }
+  const loadTree = async () => {
+    let data = await getTree({ projectId: id });
+    console.log("Existing tree data:", data);
 
- const loadTree = async () => {
-    const data = await getTree(id);
-    setTree(data)
- }
+    if (!data || data.length === 0) {
+      const projectData = await getSingleProject(id);
+      const name = projectData?.name || projectData?.project?.name || "root";
 
- useEffect(() => {  // jb jb use ke id chage hoge tb tb ye call hoga mtlb ke ye data ayega
- handleGetProject()
- loadTree()
- }, [id])
- 
-  
+      console.log("Creating root folder with name:", name);
+      await createRootFolder({ projectId: id, projectName: name });
+
+      data = await getTree({ projectId: id });
+      console.log("Tree after creating root folder:", data);
+    }
+
+    setTree(data || []);
+  };
+
+  const handleGetProject = async () => {
+    const data = await getSingleProject(id);
+    dispatch(setCurrentProject(data)); // set data in current redux state to acces esily
+  };
+
+  useEffect(() => {
+    if (id) {
+      handleGetProject();
+      loadTree();
+    }
+  }, [id]);
+
+
 
   return (
     <div className='relative flex h-screen flex-col overflow-hidden bg-[#0a0a0c]'>
@@ -60,15 +76,15 @@ dispatch(setCurrentProject(data))  // set data in current redux state to acces e
 
 
         {/* Create explorer */}
-        <AnimatePresence  initial={false}>
+        <AnimatePresence initial={false}>
           {/* jb show Explorer true hoga tb he ye show ho */}
           {showExplorer && (
-            <Explorer 
-            projectId = {id}
-            tree = {tree}
-            reloadTree = {loadTree}
+            <Explorer
+              projectId={id}
+              tree={tree}
+              reloadTree={loadTree}
             />
-          )  }
+          )}
         </AnimatePresence>
 
         {/* Main content area — placeholder for now */}

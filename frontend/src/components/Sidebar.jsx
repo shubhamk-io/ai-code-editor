@@ -89,11 +89,11 @@ const Sidebar = ({
 }) => {
   const [isOpen, setIsOpen] = useState(true);
 
-  const handleSelectTab = (sessionId) => {
-    if (setActiveSession) {
-      setActiveSession(sessionId);
-    }
-  };
+  // const handleSelectTab = (sessionId) => {
+  //   if (setActiveSession) {
+  //     setActiveSession(sessionId);
+  //   }
+  // };
 
   const navItems = [
     { id: "project", label: "Projects", icon: FiFolder },
@@ -224,7 +224,7 @@ const Sidebar = ({
         style={{ borderTop: "1px solid var(--border-color)" }}
       >
         <button
-          onClick={() => handleSelectTab("settings")}
+          // onClick={() => handleSelectTab("settings")}
           title="Settings"
           aria-label="Settings"
           className={`w-full flex items-center rounded-md text-sm font-medium transition-colors duration-150 cursor-pointer ${isOpen ? "px-3 py-2 gap-3" : "justify-center py-2 px-0"

@@ -16,11 +16,6 @@ app.get("/", (req, res) => {
         message: "Hello from file service"
     });
 });
-app.use("/api/file", (req, res) => {
-    res.json({
-        message: "Hello from file page"
-    })
-})
 
 app.use("/",router)
 
