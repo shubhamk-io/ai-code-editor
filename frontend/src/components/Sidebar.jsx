@@ -89,11 +89,11 @@ const Sidebar = ({
 }) => {
   const [isOpen, setIsOpen] = useState(true);
 
-  // const handleSelectTab = (sessionId) => {
-  //   if (setActiveSession) {
-  //     setActiveSession(sessionId);
-  //   }
-  // };
+  const handleSelectTab = (sessionId) => {
+    if (setActiveSession) {
+      setActiveSession(sessionId);
+    }
+  };
 
   const navItems = [
     { id: "project", label: "Projects", icon: FiFolder },

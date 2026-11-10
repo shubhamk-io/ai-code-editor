@@ -10,25 +10,13 @@ export const createRootFolder = async (req, res) => {
         if (!projectId || !projectName) {
             return res.status(400).json({ Message: "ProjectId and name is requiered" })
         }
-        // find fist ExistingRootFolder  is exist or not 
-        const existingRootFolder = await File.findOne({
-            projectId,
-            parentId: null,
-            isDeleted: false
-        })
+        const rootFolder = await File.findOneAndUpdate(
+            { projectId, parentId: null, isDeleted: false },
+            { $setOnInsert: { owner: userId, name: projectName, projectId, type: "folder", parentId: null } },
+            { upsert: true, new: true }
+        )
 
-        if (existingRootFolder) {
-            return res.status(400).json({ message: "Root folder already exist" })
-        }
-        const rootFolder = await File.create({
-            owner: userId,
-            name: projectName,
-            projectId,
-            type: "folder",
-            parentId: null
-        })
-
-        return res.status(201).json(rootFolder)
+        return res.status(200).json(rootFolder)
 
     } catch (error) {
         return res.status(500).json({ Message: `Create root folder Error : ${error}` })
