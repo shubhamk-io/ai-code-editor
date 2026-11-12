@@ -1,13 +1,14 @@
 import React, { useState } from 'react'
 import { motion } from "motion/react"
 import { ChevronRight, Folder as FolderIcon, FolderOpen, File as FileIcon } from 'lucide-react'
+import { getFolderColor } from '../utils/customizeIcon'
 
 const Folder = ({ projectId, tree, reloadTree, node, name }) => {
     const [open, setOpen] = useState(false)
     const isFolder = node?.type === "folder"
 
       // acces customizeIcond from customizieIcon.js
-        const color = getFolderColor(name)
+        const Foldercolor = getFolderColor(node.name)
 
     return (
 

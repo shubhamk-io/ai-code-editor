@@ -1,4 +1,4 @@
-const getFolderColor = (name= "") => {
+export  const getFolderColor = (name= "") => {
     const key = name.toLowerCase();
     
     const map = {
