@@ -31,8 +31,8 @@ export const createFolder = async (req, res) => {
         const { projectId, name, parentId } = req.body
         const userId = req.headers["x-user-id"]
 
-        if (!projectId || !name || !parentId) {
-            return res.status(200).json({ message: "projectId and name are requiredc" })
+        if (!projectId || !name) {
+            return res.status(200).json({ message: "projectId and name are required" })
         }
 
 
@@ -70,7 +70,7 @@ export const createFile = async (req, res) => {
         const { projectId, projectName, name, parentId, content = "", language = "plainText" } = req.body
         const userId = req.headers["x-user-id"]
 
-        if (!projectId || !name || !projectName) {
+        if (!projectId || !name) {
             return res.status(400).json({ message: "File name projectid are required" })
         }
 
