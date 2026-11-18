@@ -11,6 +11,7 @@ const Folder = ({ projectId, tree, reloadTree, node }) => {
     const [open, setOpen] = useState(false)
     const [creatingFolder, setCreatingFolder] = useState(false)
     const [creatingFile, setCreatingFile] = useState(false)
+    const [menu, setMenu] = useState(null)
 
     const isFolder = node?.type === "folder"
     const folderColor = getFolderColor(node?.name)
@@ -31,12 +32,30 @@ const Folder = ({ projectId, tree, reloadTree, node }) => {
         await reloadTree()
     }
 
+    const handleNewfolder = () => {
+        setOpen(true)
+        setCreatingFolder(true)
+        setCreatingFile(false)
+    }
+
+    const handleNewFile = () => {
+        setOpen(true)
+        setCreatingFile(true)
+        setCreatingFolder(false)
+    }
+
     return (
         <div className='relative select-none'>
             <motion.div
                 whileHover={{ x: 2 }}
                 transition={{ duration: 0.15, ease: "easeOut" }}
                 className="group flex items-center justify-between py-1 px-2 rounded-lg hover:bg-white/[0.05] transition-colors"
+
+                // fuction when you click on folder open our context menu popup
+                onContextMenu={(e)=> {
+                    e.preventDefault();
+                    setMenu({x:e.clientX, y:e.clientY})
+                }}
             >
                 {/* Folder/File name row */}
                 <div
@@ -73,14 +92,14 @@ const Folder = ({ projectId, tree, reloadTree, node }) => {
                 {isFolder && (
                     <div className='hidden group-hover:flex items-center gap-1 shrink-0'>
                         <button
-                            onClick={(e) => { e.stopPropagation(); setCreatingFolder(true); setCreatingFile(false) }}
+                            onClick={(e) => { e.stopPropagation(); handleNewfolder() }}
                             className='p-0.5 rounded text-zinc-500 hover:text-zinc-200 hover:bg-white/[0.08]'
                             title='New Folder'
                         >
                             <FolderPlus size={13} />
                         </button>
                         <button
-                            onClick={(e) => { e.stopPropagation(); setCreatingFile(true); setCreatingFolder(false) }}
+                            onClick={(e) => { e.stopPropagation(); handleNewFile() }}
                             className='p-0.5 rounded text-zinc-500 hover:text-zinc-200 hover:bg-white/[0.08]'
                             title='New File'
                         >

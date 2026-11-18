@@ -3,7 +3,6 @@ import { getAuth } from "firebase-admin/auth";
 import User from "../models/user.model.js";
 import crypto from "crypto"
 import redis from "../../../shared/redis.js";
-import { eventNames } from "process";
 
 export const login = async (req, res) => {
   try {
