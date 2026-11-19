@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { motion } from "motion/react"
+import { AnimatePresence, motion } from "motion/react"
 import { ChevronRight, Folder as FolderIcon, FolderOpen, File as FileIcon, FolderPlus, FilePlus } from 'lucide-react'
 import { getFolderColor } from '../utils/customizeIcon'
 import { createFile, createFolder } from '../features/fileApi'
@@ -52,9 +52,9 @@ const Folder = ({ projectId, tree, reloadTree, node }) => {
                 className="group flex items-center justify-between py-1 px-2 rounded-lg hover:bg-white/[0.05] transition-colors"
 
                 // fuction when you click on folder open our context menu popup
-                onContextMenu={(e)=> {
+                onContextMenu={(e) => {
                     e.preventDefault();
-                    setMenu({x:e.clientX, y:e.clientY})
+                    setMenu({ x: e.clientX, y: e.clientY })
                 }}
             >
                 {/* Folder/File name row */}
@@ -92,14 +92,14 @@ const Folder = ({ projectId, tree, reloadTree, node }) => {
                 {isFolder && (
                     <div className='hidden group-hover:flex items-center gap-1 shrink-0'>
                         <button
-                            onClick={(e) => { e.stopPropagation(); handleNewfolder() }}
+                            onClick={(e) => { e.stopPropagation(); handleNewfolder(node) }}
                             className='p-0.5 rounded text-zinc-500 hover:text-zinc-200 hover:bg-white/[0.08]'
                             title='New Folder'
                         >
                             <FolderPlus size={13} />
                         </button>
                         <button
-                            onClick={(e) => { e.stopPropagation(); handleNewFile() }}
+                            onClick={(e) => { e.stopPropagation(); handleNewFile(node) }}
                             className='p-0.5 rounded text-zinc-500 hover:text-zinc-200 hover:bg-white/[0.08]'
                             title='New File'
                         >
@@ -157,6 +157,35 @@ const Folder = ({ projectId, tree, reloadTree, node }) => {
                     ))}
                 </div>
             )}
+
+            <AnimatePresence>
+                {menu && (  // if agr menu ho to  7
+                    <>
+
+                        <motion.div
+                            className='fixed inset-0 z-40'
+                            onClick={(() => setMenu(null))}
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                        />
+
+                        <motion.div 
+                        initial={{opacity: 0, scale:0.96, y:-6}}
+                        animate={{opacity:1, scale:1, y:0}}
+                        exit={{opacity:0, scale:0.96, y:-6}}
+                        transition={{duration:0.14, ease:"easeOut"}}
+                        className='fixed z-50 w-52 rounded-xl border border-white/[0.08] bg-[#17171a]/95 py-1.5 shadow-2xl shadow-black/50 backdrop-blur-xl '
+                        style={{left:menu.x, top:menu.y}}
+                        >
+
+
+                        </motion.div>
+
+                    </>
+                )}
+
+            </AnimatePresence>
         </div>
     )
 }
