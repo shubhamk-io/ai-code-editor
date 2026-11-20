@@ -1,8 +1,10 @@
 import React, { useState } from 'react'
 import { AnimatePresence, motion } from "motion/react"
-import { ChevronRight, Folder as FolderIcon, FolderOpen, File as FileIcon, FolderPlus, FilePlus } from 'lucide-react'
+import { ChevronRight, Folder as FolderIcon, FolderOpen, File as FileIcon, FolderPlus, FilePlus, FilePlus2, Pencil, Delete, Trash } from 'lucide-react'
 import { getFolderColor } from '../utils/customizeIcon'
 import { createFile, createFolder } from '../features/fileApi'
+import { createPortal } from "react-dom"
+
 
 const Folder = ({ projectId, tree, reloadTree, node }) => {
 
@@ -158,8 +160,10 @@ const Folder = ({ projectId, tree, reloadTree, node }) => {
                 </div>
             )}
 
-            <AnimatePresence>
-                {menu && (  // if agr menu ho to  7
+
+            {menu &&   // if agr menu ho to  7
+
+                createPortal(
                     <>
 
                         <motion.div
@@ -170,22 +174,55 @@ const Folder = ({ projectId, tree, reloadTree, node }) => {
                             exit={{ opacity: 0 }}
                         />
 
-                        <motion.div 
-                        initial={{opacity: 0, scale:0.96, y:-6}}
-                        animate={{opacity:1, scale:1, y:0}}
-                        exit={{opacity:0, scale:0.96, y:-6}}
-                        transition={{duration:0.14, ease:"easeOut"}}
-                        className='fixed z-50 w-52 rounded-xl border border-white/[0.08] bg-[#17171a]/95 py-1.5 shadow-2xl shadow-black/50 backdrop-blur-xl '
-                        style={{left:menu.x, top:menu.y}}
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.96, y: -6 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            exit={{ opacity: 0, scale: 0.96, y: -6 }}
+                            transition={{ duration: 0.14, ease: "easeOut" }}
+                            className='fixed z-50 w-52 rounded-xl border border-white/[0.08] bg-[#17171a]/95 py-1.5 shadow-2xl shadow-black/50 backdrop-blur-xl '
+                            style={{ left: menu.x, top: menu.y }}
                         >
 
+                            <button className=' mx-1 flex w-[calc(100%-8ps)] items-center gap-2 rounded-md px-3 py-2 text-left text-[13px] text-zinc-300 transition-colors hover:bg-white/[0.06] hover:text-white '
+                                onClick={() => {
+                                    setMenu(null);
+                                    handleNewFile(node);
+                                }}
+                            >
+                                <FilePlus2 size={13} />
+                                New File
+                            </button>
+
+                            <button className=' mx-1 flex w-[calc(100%-8ps)] items-center gap-2 rounded-md px-3 py-2 text-left text-[13px] text-zinc-300 transition-colors hover:bg-white/[0.06] hover:text-white '
+                                onClick={() => {
+                                    setMenu(null);
+                                    handleNewfolder(node);
+                                }}
+                            >
+                                <FolderPlus size={13} />
+                                New folder
+                            </button>
+
+                            <div className='my-1 h-px bg-white/[0.08] '/>
+
+                            <button className='mx-1 flex w-[(calc(100%-8xpx)] items-center gap-2 rounded-md px-3 py-2 text-zinc-300 transition-colors hover:bg-white/[0.06] hover:text-white ' 
+                            onClick={() => setMenu(null)}  >
+                                <Pencil size={13} />
+                                Rename
+                            </button>
+                            
+                            <button className='mx-1 flex w-[(calc(100%-8xpx)] items-center gap-2 rounded-md px-3 py-2 text-zinc-300 transition-colors hover:bg-white/[0.06] hover:text-white ' 
+                            onClick={() => setMenu(null)} >
+                                <Trash size={13} />
+                                Delete
+                            </button  >
 
                         </motion.div>
 
-                    </>
+                    </>, document.body
                 )}
 
-            </AnimatePresence>
+
         </div>
     )
 }
