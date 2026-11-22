@@ -1,3 +1,22 @@
+import { KeyRound, Lock, Package } from "lucide-react";
+import { color } from "motion/react";
+
+export const getFileIcon = (name="") => {
+    const lower = name.toLowerCase();
+    const ext = lower.name.split(".").pop()
+
+
+    const knowsName = {
+        "package.json":{icon:Package, color:"text-emerald-400"},
+        "package-lock-json": {icon:Lock, color:"text-zinc-500"},
+        ".evn": {icon:KeyRound,  color:"text-lime-400" },
+    }
+
+    
+
+}
+
+
 export  const getFolderColor = (name= "") => {
     const key = name.toLowerCase();
     
