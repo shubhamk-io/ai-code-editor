@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import TopBar from '../components/TopBar'
 import ActivityBar from '../components/ActivityBar'
-import { AnimatePresence } from 'motion/react'
+import { AnimatePresence, motion } from 'motion/react'
 import Explorer from '../components/Explorer'
 import { useParams } from "react-router-dom"
 import { getSingleProject } from '../features/project.js'
 import { useDispatch } from 'react-redux'
 import { setCurrentProject } from '../redux/projectSlice.js'
 import { getTree, createRootFolder } from '../features/fileApi.js'
-
+import {  Maximize2, Minimize2 } from 'lucide-react'
 const ProjectPage = () => {
 
 
@@ -17,12 +17,13 @@ const ProjectPage = () => {
   const [showBot, setShowBot] = useState(false)
   const [showTerminal, setShowTerminal] = useState(false)
   const [showPreview, setShowPreview] = useState(false) // top bar preview
+  const [mobilePanel, setMobilePanel] = useState("explorer")
+  const [isPreviewFullScreen, setIsPreviewFullScreen] = useState(false)
   const [tree, setTree] = useState([])
   const dispatch = useDispatch()
 
   const loadTree = async () => {
     let data = await getTree({ projectId: id });
-    console.log("Existing tree data:", data);
 
     if (!data || data.length === 0) {
       const projectData = await getSingleProject(id);
@@ -32,7 +33,6 @@ const ProjectPage = () => {
       await createRootFolder({ projectId: id, projectName: name });
 
       data = await getTree({ projectId: id });
-      console.log("Tree after creating root folder:", data);
     }
 
     setTree(data || []);
@@ -63,33 +63,57 @@ const ProjectPage = () => {
 
       {/* Main workspace area: ActivityBar + Content */}
       <div className='flex flex-1 overflow-hidden'>
-        {/* Activity Bar (narrow left sidebar with icons) */}
-        <ActivityBar
-          // passiing props to Activity bar 
-          showExplorer={showExplorer}
-          setShowExplorer={setShowExplorer}
-          showBot={showBot}
-          setShowBot={setShowBot}
-          showTerminal={showTerminal}
-          setShowTerminal={setShowTerminal}
-        />
+        <div className='hidden md:block'>
+          {/* Activity Bar (narrow left sidebar with icons) */}
+          <ActivityBar
+            // passiing props to Activity bar 
+            showExplorer={showExplorer}
+            setShowExplorer={setShowExplorer}
+            showBot={showBot}
+            setShowBot={setShowBot}
+            showTerminal={showTerminal}
+            setShowTerminal={setShowTerminal}
+          />
+
+        </div>
 
 
         {/* Create explorer */}
-        <AnimatePresence initial={false}>
-          {/* jb show Explorer true hoga tb he ye show ho */}
-          {showExplorer && (
-            <Explorer
-              projectId={id}
-              tree={tree}
-              reloadTree={loadTree}
-            />
-          )}
-        </AnimatePresence>
+        <div className={`${mobilePanel === "explorer" ? "flex" : "hidden"
+          } w-full md:flex md:w-auto`}>
+          <AnimatePresence initial={false}>
+            {/* jb show Explorer true hoga tb he ye show ho */}
+            {showExplorer && (
+              <Explorer
+                projectId={id}
+                tree={tree}
+                reloadTree={loadTree}
+              />
+            )}
+          </AnimatePresence>
+        </div>
 
         {/* Main content area — placeholder for now */}
-        <div className='flex-1 overflow-hidden'>
+        <div className={`${mobilePanel === "editor" ? "flex" : "hidden"} 
+           relative w-full min-w-0 flex flex-1 flex-col overflow-hidden border-x border-white/[0.05] md:flex `}>
           {/* Future: File Explorer Sidebar + Editor Panels will go here */}
+
+          <div className='pointer-events-none absolute right-2 top-2 z-40 flex items-center gap-1.5 sm:right-4 sm:top-3 sm:gap-2'>
+            {/* showPreview is true  then showng button minimize and maximize  */}
+            {showPreview && (
+              <motion.button 
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                type="button"
+                onClick={() => setIsPreviewFullScreen((v) => !v)}
+                title={isPreviewFullScreen ? "Exit fullscreen" : "Fullscreen preview"}
+                className='pointer-events-auto flex items-center justify-center rounded-lg border border-white/10 bg-[#111113]/95 p-1.5 text-zinc-400 shadow-lg shadow-black/40 backdrop-blur hover:text-white cursor-pointer sm:p-2'
+              >
+                {isPreviewFullScreen ? <Minimize2 size={16} /> : <Maximize2 size={16} />}
+              </motion.button>
+            )}
+          </div>
         </div>
       </div>
     </div>

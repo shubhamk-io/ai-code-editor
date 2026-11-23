@@ -52,7 +52,7 @@ export const createFile = async ({
 };
 
 //  create updatefile fetch api
-export const updateFlile = async ({ name, content, id }) => {
+export const updateFlile = async ({ name, content="", id }) => {
   try {
     const { data } = await axios.post(`/api/file/update/${id}`, {
       name,
@@ -66,9 +66,10 @@ export const updateFlile = async ({ name, content, id }) => {
 };
 
 //  Delete file route fetch api
-export const deleteFile = async ({ id }) => {
+export const deleteFile = async (arg) => {
   try {
-    const { data } = await axios.delete(`/api/file/${id}`);
+    const fileId = typeof arg === "object" && arg !== null ? arg.id : arg;
+    const { data } = await axios.delete(`/api/file/${fileId}`);
     return data;
   } catch (error) {
     console.log(error);
