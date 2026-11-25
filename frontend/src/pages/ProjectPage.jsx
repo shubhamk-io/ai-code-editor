@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import TopBar from '../components/TopBar'
 import ActivityBar from '../components/ActivityBar'
-import { AnimatePresence, motion } from 'motion/react'
+import { AnimatePresence, hover, motion } from 'motion/react'
 import Explorer from '../components/Explorer'
 import { useParams } from "react-router-dom"
 import { getSingleProject } from '../features/project.js'
 import { useDispatch } from 'react-redux'
 import { setCurrentProject } from '../redux/projectSlice.js'
 import { getTree, createRootFolder } from '../features/fileApi.js'
-import {  Maximize2, Minimize2 } from 'lucide-react'
+import { Code2, Eye, Maximize2, Minimize2 } from 'lucide-react'
 const ProjectPage = () => {
 
 
@@ -101,7 +101,7 @@ const ProjectPage = () => {
           <div className='pointer-events-none absolute right-2 top-2 z-40 flex items-center gap-1.5 sm:right-4 sm:top-3 sm:gap-2'>
             {/* showPreview is true  then showng button minimize and maximize  */}
             {showPreview && (
-              <motion.button 
+              <motion.button
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.9 }}
@@ -113,6 +113,43 @@ const ProjectPage = () => {
                 {isPreviewFullScreen ? <Minimize2 size={16} /> : <Maximize2 size={16} />}
               </motion.button>
             )}
+
+            <div className='pointer-events-auto flex items-center gap-0.5 border border-white/10 bg-[#111113]/95 shadow-black/40 backdrop-blur '>
+
+              <button
+                onClick={() => {
+                  setShowPreview(false);
+                  setIsPreviewFullScreen(false)
+                }}
+                className={`relative flex items-center gap-1.5 rounded-md px-2 py-1 text-[11px] font-semibold transition-colors sm:px-3 sm:py-1.5 ${showPreview ? "text-white" : "text-zinc-500 hover:text-zinc-300"} `} >
+
+                {!showPreview && (
+                  <motion.div
+                    className='absolute insert-0 rounded-md bg-gradient-to-br from-zinc-700 to-zinc-800'
+                    transition={{ type: "spring", duration: 0.4, bounce: 0.15 }}
+                  />
+                )}
+                <Code2 />
+                Editor
+              </button>
+
+              <button
+                onClick={() => setShowPreview(true)}
+                className={`relative flex items-center gap-1.5 rounded-md px-2 py-1 text-[11px] font-semibold transition-colors sm:px-3 sm:py-1.5 ${showPreview ? "text-white" : "text-zinc-500 hover:text-zinc-300"} `} >
+
+                {showPreview && (
+                  <motion.div
+                    className='absolute insert-0 rounded-md bg-gradient-to-br from-zinc-700 to-zinc-800'
+                    transition={{ type: "spring", duration: 0.4, bounce: 0.15 }}
+                  />
+                )}
+                <Eye />
+                Preview
+
+              </button>
+
+            </div>
+
           </div>
         </div>
       </div>
