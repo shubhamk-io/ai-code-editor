@@ -129,8 +129,8 @@ const ProjectPage = () => {
                     transition={{ type: "spring", duration: 0.4, bounce: 0.15 }}
                   />
                 )}
-                <Code2 />
-                Editor
+                <Code2 size={13} className='relative' />
+               <span className='relative hidden sm:inline'> Editor</span>
               </button>
 
               <button
@@ -143,8 +143,8 @@ const ProjectPage = () => {
                     transition={{ type: "spring", duration: 0.4, bounce: 0.15 }}
                   />
                 )}
-                <Eye />
-                Preview
+                <Eye size={13} className='relative' />
+                <span className='relative hidden sm:inline'  > Preview</span>
 
               </button>
 
@@ -152,6 +152,9 @@ const ProjectPage = () => {
 
           </div>
         </div>
+
+
+        
       </div>
     </div>
   )

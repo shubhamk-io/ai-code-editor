@@ -15,7 +15,7 @@ import { getFileIcon, getFolderColor } from "../utils/customizeIcon";
 import { createFile, createFolder, deleteFile, updateFlile } from "../features/fileApi";
 import { createPortal } from "react-dom";
 
-const Folder = ({ projectId, tree, reloadTree, node }) => {
+const Folder = ({ projectId, tree, reloadTree, node, openFile }) => {
     const [fileName, setFileName] = useState("");
     const [folderName, setFolderName] = useState("");
     const [open, setOpen] = useState(false);
@@ -104,7 +104,9 @@ const Folder = ({ projectId, tree, reloadTree, node }) => {
     };
 
     return (
-        <div className="relative select-none">
+        <div className="relative select-none"
+        onClick={() => openFile(node)}
+        >
             <motion.div
                 whileHover={{ x: 2 }}
                 transition={{ duration: 0.15, ease: "easeOut" }}

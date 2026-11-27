@@ -4,7 +4,7 @@ import { FiRefreshCcw } from 'react-icons/fi'
 import { FolderTree } from 'lucide-react'
 import Folder from '../components/Folder'
 
-const Explorer = ({ projectId, tree, reloadTree }) => {
+const Explorer = ({ projectId, tree, reloadTree,openFile }) => {
   return (
     <motion.div
       initial={{ opacity: 0, x: -16, width: 0 }}
@@ -79,6 +79,7 @@ const Explorer = ({ projectId, tree, reloadTree }) => {
               projectId={projectId}
               tree={tree}
               reloadTree={reloadTree}
+              openFile = {openFile}
             />
           ))
         )}  
