@@ -105,12 +105,13 @@ const Folder = ({ projectId, tree, reloadTree, node, openFile }) => {
 
     return (
         <div className="relative select-none"
-        onClick={() => openFile(node)}
+        
         >
             <motion.div
                 whileHover={{ x: 2 }}
                 transition={{ duration: 0.15, ease: "easeOut" }}
                 className="group flex items-center justify-between py-1 px-2 rounded-lg hover:bg-white/[0.05] transition-colors"
+                onClick={() => openFile(node)}
                 onContextMenu={(e) => {
                     e.preventDefault();
                     setMenu({ x: e.clientX, y: e.clientY });
@@ -265,6 +266,7 @@ const Folder = ({ projectId, tree, reloadTree, node, openFile }) => {
                             projectId={projectId}
                             tree={tree}
                             reloadTree={reloadTree}
+                            openFile={openFile}
                         />
                     ))}
                 </div>
